@@ -64,6 +64,19 @@ export interface RentcastProperty {
   ownerOccupied?: boolean;
 }
 
+// Expand a bounding box by a factor on each side for prefetching surrounding area.
+// factor=0.4 means 20% expansion per side (40% total per axis).
+export function expandBbox(bbox: BoundingBox, factor = 0.4): BoundingBox {
+  const latPad = (bbox.north - bbox.south) * factor / 2;
+  const lngPad = (bbox.east - bbox.west) * factor / 2;
+  return {
+    north: bbox.north + latPad,
+    south: bbox.south - latPad,
+    east: bbox.east + lngPad,
+    west: bbox.west - lngPad,
+  };
+}
+
 // Convert a bounding box to a center lat/lng + radius (miles) using Haversine.
 // The radius circumscribes the rectangle so the full bbox is covered.
 function bboxToRadius(bbox: BoundingBox): {

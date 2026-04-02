@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
   }
 
   // Rate limit check
-  if (!canMakeRequest()) {
+  if (!(await canMakeRequest(supabase))) {
     return NextResponse.json(
       { error: "API rate limit reached. Try again next month." },
       { status: 429, headers: { "X-Rentcast-Remaining": "0" } }
@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const property = await lookupProperty(address);
-    recordRequest();
+    await recordRequest(supabase);
 
     // Compute safety score from PostGIS
     const { data: safety } = await supabase.rpc("get_safety_at_point", {
@@ -120,7 +120,7 @@ export async function GET(req: NextRequest) {
     };
 
     return NextResponse.json(result, {
-      headers: { "X-Rentcast-Remaining": getRemainingRequests().toString() },
+      headers: { "X-Rentcast-Remaining": (await getRemainingRequests(supabase)).toString() },
     });
   } catch (error) {
     console.error("Property lookup error:", error);
