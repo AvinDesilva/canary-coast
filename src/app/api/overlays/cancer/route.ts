@@ -16,5 +16,13 @@ export async function GET() {
     return NextResponse.json(MOCK_CANCER_GEOJSON);
   }
 
+  // Fall back to mock data when cancer ingestion hasn't been run yet
+  // (SQL function returns empty features array when all SIR values are null)
+  const geojson = data as { features?: unknown[] };
+  if (!geojson.features || geojson.features.length === 0) {
+    console.warn("Cancer overlay: no ingested SIR data found, falling back to mock");
+    return NextResponse.json(MOCK_CANCER_GEOJSON);
+  }
+
   return NextResponse.json(data);
 }
