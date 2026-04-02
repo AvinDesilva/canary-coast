@@ -18,7 +18,7 @@ interface MapContainerProps {
   overlays: { flood: boolean; cancer: boolean; listings: boolean };
   floodGeoJSON?: GeoJSON.FeatureCollection;
   cancerGeoJSON?: GeoJSON.FeatureCollection;
-  onBoundsChange: (bounds: BoundingBox) => void;
+  onBoundsChange: (bounds: BoundingBox, zoom: number) => void;
   onSelectListing: (listing: CachedListing) => void;
   onFlyToReady?: (flyTo: (lat: number, lng: number, zoom?: number) => void) => void;
 }
@@ -41,13 +41,14 @@ export default function MapContainer({
   const handleMoveEnd = useCallback(() => {
     if (!map.current) return;
     const b = map.current.getBounds();
+    const z = map.current.getZoom();
     if (!b) return;
     onBoundsChange({
       north: b.getNorth(),
       south: b.getSouth(),
       east: b.getEast(),
       west: b.getWest(),
-    });
+    }, z);
   }, [onBoundsChange]);
 
   useEffect(() => {
@@ -77,7 +78,7 @@ export default function MapContainer({
         south: loadBounds.getSouth(),
         east: loadBounds.getEast(),
         west: loadBounds.getWest(),
-      });
+      }, m.getZoom());
       // Expose flyTo to parent
       if (onFlyToReady) {
         onFlyToReady((lat, lng, zoom = 15) => {

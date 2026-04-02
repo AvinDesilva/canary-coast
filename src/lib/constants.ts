@@ -10,7 +10,7 @@ export const HARRIS_COUNTY_BOUNDS = {
 export const DEFAULT_ZOOM = 10;
 
 export const LISTING_CACHE_TTL_HOURS = Number(
-  process.env.LISTING_CACHE_TTL_HOURS || 24
+  process.env.LISTING_CACHE_TTL_HOURS || 168
 );
 
 export const FLOOD_SCORE_MAP: Record<FloodRiskLevel, number> = {

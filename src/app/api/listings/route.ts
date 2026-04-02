@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchListings, normalizePropertyType } from "@/lib/rentcast";
+import { searchListings, normalizePropertyType, expandBbox } from "@/lib/rentcast";
 import { canMakeRequest, recordRequest, getRemainingRequests } from "@/lib/rate-limit";
 import { computeSafetyScore } from "@/lib/safety";
 import { createServiceClient } from "@/lib/supabase/server";
+import { snapBbox, clampToCounty } from "@/lib/bbox-utils";
 import { MOCK_LISTINGS } from "@/lib/mock-data";
+import type { BoundingBox } from "@/types/geo";
 import type { FloodRiskLevel } from "@/types/safety";
 
 export async function GET(req: NextRequest) {
@@ -34,49 +36,51 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(filtered);
   }
 
+  // Snap bbox to 0.05-degree grid for better cache hit rates across users
+  const snapped = snapBbox({ south: latMin, north: latMax, west: lngMin, east: lngMax });
+
   try {
     // Check listing cache first
     const { data: cached } = await supabase.rpc("get_listings_in_bbox", {
-      lat_min: latMin,
-      lng_min: lngMin,
-      lat_max: latMax,
-      lng_max: lngMax,
+      lat_min: snapped.south,
+      lng_min: snapped.west,
+      lat_max: snapped.north,
+      lng_max: snapped.east,
     });
 
     if (cached && cached.length > 0) {
       return NextResponse.json(cached, {
-        headers: { "X-Rentcast-Remaining": getRemainingRequests().toString() },
+        headers: { "X-Rentcast-Remaining": (await getRemainingRequests(supabase)).toString() },
       });
     }
 
-    // Check area cache — has this bbox already been searched?
+    // Check area cache — has this bbox already been searched (even if it returned zero results)?
     const { data: areaCached } = await supabase.rpc("is_area_cached", {
-      lat_min: latMin,
-      lng_min: lngMin,
-      lat_max: latMax,
-      lng_max: lngMax,
+      lat_min: snapped.south,
+      lng_min: snapped.west,
+      lat_max: snapped.north,
+      lng_max: snapped.east,
     });
 
     if (areaCached) {
-      // Area was previously searched but has zero results in this bbox
       return NextResponse.json([], {
         headers: {
           "X-Cache-Hit": "true",
-          "X-Rentcast-Remaining": getRemainingRequests().toString(),
+          "X-Rentcast-Remaining": (await getRemainingRequests(supabase)).toString(),
         },
       });
     }
 
     // Rate limit check before calling Rentcast
-    if (!canMakeRequest()) {
+    if (!(await canMakeRequest(supabase))) {
       // Return stale cached data if available, otherwise empty
       const { data: stale } = await supabase
         .from("listings")
         .select("*")
-        .gte("latitude", latMin)
-        .lte("latitude", latMax)
-        .gte("longitude", lngMin)
-        .lte("longitude", lngMax);
+        .gte("latitude", snapped.south)
+        .lte("latitude", snapped.north)
+        .gte("longitude", snapped.west)
+        .lte("longitude", snapped.east);
 
       return NextResponse.json(stale ?? [], {
         headers: {
@@ -86,18 +90,18 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Cache miss — fetch from Rentcast
-    const bbox = { south: latMin, north: latMax, west: lngMin, east: lngMax };
-    const results = await searchListings(bbox);
-    recordRequest();
+    // Cache miss — expand bbox by 40% to prefetch surrounding area, clamped to county bounds
+    const expandedBbox: BoundingBox = clampToCounty(expandBbox(snapped, 0.4));
+    const results = await searchListings(expandedBbox);
+    await recordRequest(supabase);
 
-    // Record the searched area in search_cache
+    // Record the expanded area in search_cache so subsequent pans within it skip Rentcast
     await supabase.from("search_cache").insert({
-      bbox: `SRID=4326;POLYGON((${lngMin} ${latMin}, ${lngMax} ${latMin}, ${lngMax} ${latMax}, ${lngMin} ${latMax}, ${lngMin} ${latMin}))`,
+      bbox: `SRID=4326;POLYGON((${expandedBbox.west} ${expandedBbox.south}, ${expandedBbox.east} ${expandedBbox.south}, ${expandedBbox.east} ${expandedBbox.north}, ${expandedBbox.west} ${expandedBbox.north}, ${expandedBbox.west} ${expandedBbox.south}))`,
       listing_count: results.length,
     });
 
-    // Compute safety scores and cache
+    // Compute safety scores and cache listings
     const listings = await Promise.all(
       results.map(async (r) => {
         const { data: safety } = await supabase.rpc("get_safety_at_point", {
@@ -151,7 +155,7 @@ export async function GET(req: NextRequest) {
     );
 
     return NextResponse.json(listings, {
-      headers: { "X-Rentcast-Remaining": getRemainingRequests().toString() },
+      headers: { "X-Rentcast-Remaining": (await getRemainingRequests(supabase)).toString() },
     });
   } catch (error) {
     console.error("Listings API error:", error);

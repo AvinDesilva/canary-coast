@@ -19,15 +19,17 @@ const MapContainer = dynamic(
 
 export default function Home() {
   const [bounds, setBounds] = useState<BoundingBox | null>(null);
+  const [zoom, setZoom] = useState<number>(10);
   const [selectedListing, setSelectedListing] = useState<CachedListing | null>(null);
   const [remainingRequests, setRemainingRequests] = useState<number | undefined>(undefined);
   const flyToRef = useRef<((lat: number, lng: number, zoom?: number) => void) | null>(null);
 
   const { overlays, toggleOverlay, floodGeoJSON, cancerGeoJSON } = useMapOverlays();
-  const { listings, loading } = useMapListings(bounds, setRemainingRequests);
+  const { listings, loading } = useMapListings(bounds, zoom, setRemainingRequests);
 
-  const handleBoundsChange = useCallback((newBounds: BoundingBox) => {
+  const handleBoundsChange = useCallback((newBounds: BoundingBox, newZoom: number) => {
     setBounds(newBounds);
+    setZoom(newZoom);
   }, []);
 
   const handleSelectListing = useCallback((listing: CachedListing) => {

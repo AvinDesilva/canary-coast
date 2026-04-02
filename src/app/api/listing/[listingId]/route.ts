@@ -31,12 +31,12 @@ export async function GET(
 
     if (cached) {
       return NextResponse.json(cached, {
-        headers: { "X-Rentcast-Remaining": getRemainingRequests().toString() },
+        headers: { "X-Rentcast-Remaining": (await getRemainingRequests(supabase)).toString() },
       });
     }
 
     // Rate limit check
-    if (!canMakeRequest()) {
+    if (!(await canMakeRequest(supabase))) {
       return NextResponse.json(
         { error: "API rate limit reached. Try again next month." },
         { status: 429, headers: { "X-Rentcast-Remaining": "0" } }
@@ -45,10 +45,10 @@ export async function GET(
 
     // Fetch from Rentcast
     const details = await getListingById(externalId);
-    recordRequest();
+    await recordRequest(supabase);
 
     return NextResponse.json(details, {
-      headers: { "X-Rentcast-Remaining": getRemainingRequests().toString() },
+      headers: { "X-Rentcast-Remaining": (await getRemainingRequests(supabase)).toString() },
     });
   } catch (error) {
     console.error("Listing detail error:", error);
