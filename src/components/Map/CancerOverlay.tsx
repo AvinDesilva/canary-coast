@@ -4,16 +4,29 @@ import { useEffect } from "react";
 import type mapboxgl from "mapbox-gl";
 import { MOCK_CANCER_GEOJSON } from "@/lib/mock-data";
 import { DEMO_MODE } from "@/lib/constants";
+import type { CancerTypeValue } from "@/lib/constants";
 
 const SOURCE_ID = "cancer-source";
 const LAYER_ID = "cancer-layer";
 
+function buildColorExpression(cancerType: CancerTypeValue) {
+  return [
+    "interpolate",
+    ["linear"],
+    ["get", `cancer_sir_${cancerType}`],
+    0.5, "#22c55e",
+    1.0, "#eab308",
+    1.5, "#ef4444",
+  ];
+}
+
 interface CancerOverlayProps {
   map: mapboxgl.Map;
   geojson?: GeoJSON.FeatureCollection;
+  cancerType?: CancerTypeValue;
 }
 
-export default function CancerOverlay({ map, geojson }: CancerOverlayProps) {
+export default function CancerOverlay({ map, geojson, cancerType = "overall" }: CancerOverlayProps) {
   useEffect(() => {
     const data = geojson || (DEMO_MODE ? MOCK_CANCER_GEOJSON : null);
     if (!data) return;
@@ -26,17 +39,7 @@ export default function CancerOverlay({ map, geojson }: CancerOverlayProps) {
           type: "fill",
           source: SOURCE_ID,
           paint: {
-            "fill-color": [
-              "interpolate",
-              ["linear"],
-              ["get", "cancer_sir"],
-              0.5,
-              "#22c55e",
-              1.0,
-              "#eab308",
-              1.5,
-              "#ef4444",
-            ],
+            "fill-color": buildColorExpression(cancerType) as mapboxgl.Expression,
             "fill-opacity": 0.2,
           },
         },
@@ -54,7 +57,13 @@ export default function CancerOverlay({ map, geojson }: CancerOverlayProps) {
         // Map already removed by parent cleanup
       }
     };
-  }, [map, geojson]);
+  }, [map, geojson]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Update paint expression when cancer type changes (layer already exists)
+  useEffect(() => {
+    if (!map.getLayer(LAYER_ID)) return;
+    map.setPaintProperty(LAYER_ID, "fill-color", buildColorExpression(cancerType));
+  }, [map, cancerType]);
 
   return null;
 }

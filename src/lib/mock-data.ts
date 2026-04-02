@@ -210,7 +210,7 @@ export const MOCK_CANCER_GEOJSON: GeoJSON.FeatureCollection = {
     // Montrose — low SIR
     {
       type: "Feature",
-      properties: { geoid: "48201311100", cancer_sir: 0.72 },
+      properties: { geoid: "48201311100", cancer_sir_overall: 0.72, cancer_sir_brain: 0.68, cancer_sir_lung: 0.65, cancer_sir_breast: 0.78, cancer_sir_prostate: 0.71, cancer_sir_colon: 0.74 },
       geometry: {
         type: "Polygon",
         coordinates: [[[-95.41, 29.72], [-95.38, 29.72], [-95.38, 29.75], [-95.41, 29.75], [-95.41, 29.72]]],
@@ -219,7 +219,7 @@ export const MOCK_CANCER_GEOJSON: GeoJSON.FeatureCollection = {
     // Meyerland — elevated SIR
     {
       type: "Feature",
-      properties: { geoid: "48201342200", cancer_sir: 1.35 },
+      properties: { geoid: "48201342200", cancer_sir_overall: 1.35, cancer_sir_brain: 1.15, cancer_sir_lung: 1.52, cancer_sir_breast: 1.18, cancer_sir_prostate: 1.42, cancer_sir_colon: 1.31 },
       geometry: {
         type: "Polygon",
         coordinates: [[[-95.46, 29.67], [-95.42, 29.67], [-95.42, 29.70], [-95.46, 29.70], [-95.46, 29.67]]],
@@ -228,7 +228,7 @@ export const MOCK_CANCER_GEOJSON: GeoJSON.FeatureCollection = {
     // Greenspoint — high SIR
     {
       type: "Feature",
-      properties: { geoid: "48201252100", cancer_sir: 1.65 },
+      properties: { geoid: "48201252100", cancer_sir_overall: 1.65, cancer_sir_brain: 1.45, cancer_sir_lung: 1.88, cancer_sir_breast: 1.45, cancer_sir_prostate: 1.72, cancer_sir_colon: 1.58 },
       geometry: {
         type: "Polygon",
         coordinates: [[[-95.42, 29.86], [-95.38, 29.86], [-95.38, 29.89], [-95.42, 29.89], [-95.42, 29.86]]],
@@ -237,7 +237,7 @@ export const MOCK_CANCER_GEOJSON: GeoJSON.FeatureCollection = {
     // River Oaks / Galleria — low SIR
     {
       type: "Feature",
-      properties: { geoid: "48201321500", cancer_sir: 0.65 },
+      properties: { geoid: "48201321500", cancer_sir_overall: 0.65, cancer_sir_brain: 0.72, cancer_sir_lung: 0.58, cancer_sir_breast: 0.69, cancer_sir_prostate: 0.61, cancer_sir_colon: 0.70 },
       geometry: {
         type: "Polygon",
         coordinates: [[[-95.48, 29.72], [-95.45, 29.72], [-95.45, 29.75], [-95.48, 29.75], [-95.48, 29.72]]],
@@ -246,7 +246,7 @@ export const MOCK_CANCER_GEOJSON: GeoJSON.FeatureCollection = {
     // Pasadena — high SIR
     {
       type: "Feature",
-      properties: { geoid: "48201461100", cancer_sir: 1.72 },
+      properties: { geoid: "48201461100", cancer_sir_overall: 1.72, cancer_sir_brain: 1.38, cancer_sir_lung: 2.01, cancer_sir_breast: 1.55, cancer_sir_prostate: 1.68, cancer_sir_colon: 1.82 },
       geometry: {
         type: "Polygon",
         coordinates: [[[-95.21, 29.65], [-95.17, 29.65], [-95.17, 29.70], [-95.21, 29.70], [-95.21, 29.65]]],
@@ -255,7 +255,7 @@ export const MOCK_CANCER_GEOJSON: GeoJSON.FeatureCollection = {
     // Energy Corridor / Memorial — very low SIR
     {
       type: "Feature",
-      properties: { geoid: "48201520200", cancer_sir: 0.55 },
+      properties: { geoid: "48201520200", cancer_sir_overall: 0.55, cancer_sir_brain: 0.62, cancer_sir_lung: 0.48, cancer_sir_breast: 0.59, cancer_sir_prostate: 0.53, cancer_sir_colon: 0.57 },
       geometry: {
         type: "Polygon",
         coordinates: [[[-95.65, 29.76], [-95.58, 29.76], [-95.58, 29.79], [-95.65, 29.79], [-95.65, 29.76]]],
@@ -264,7 +264,7 @@ export const MOCK_CANCER_GEOJSON: GeoJSON.FeatureCollection = {
     // Gulfton — high SIR
     {
       type: "Feature",
-      properties: { geoid: "48201340500", cancer_sir: 1.48 },
+      properties: { geoid: "48201340500", cancer_sir_overall: 1.48, cancer_sir_brain: 1.22, cancer_sir_lung: 1.65, cancer_sir_breast: 1.38, cancer_sir_prostate: 1.55, cancer_sir_colon: 1.44 },
       geometry: {
         type: "Polygon",
         coordinates: [[[-95.53, 29.69], [-95.50, 29.69], [-95.50, 29.71], [-95.53, 29.71], [-95.53, 29.69]]],
@@ -273,7 +273,7 @@ export const MOCK_CANCER_GEOJSON: GeoJSON.FeatureCollection = {
     // Spring Branch — moderate SIR
     {
       type: "Feature",
-      properties: { geoid: "48201230100", cancer_sir: 1.12 },
+      properties: { geoid: "48201230100", cancer_sir_overall: 1.12, cancer_sir_brain: 0.98, cancer_sir_lung: 1.25, cancer_sir_breast: 1.08, cancer_sir_prostate: 1.18, cancer_sir_colon: 1.05 },
       geometry: {
         type: "Polygon",
         coordinates: [[[-95.54, 29.80], [-95.49, 29.80], [-95.49, 29.83], [-95.54, 29.83], [-95.54, 29.80]]],
