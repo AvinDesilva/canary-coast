@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+@import "mapbox-gl/dist/mapbox-gl.css" layer(base);
+
+@theme {
+  --color-twilight-indigo: #273A71;
+  --color-dusk-blue: #3358A3;
+  --color-sapphire-sky: #3A70BA;
+  --color-fresh-sky: #3BADF6;
+  --color-emerald: #6DD799;
+  --color-alice-blue: #D6DEE9;
+  --color-black: #000000;
+
+  --color-score-excellent: #22c55e;
+  --color-score-good: #84cc16;
+  --color-score-fair: #eab308;
+  --color-score-caution: #f97316;
+  --color-score-high-risk: #ef4444;
+
+  --font-fraunces: "Fraunces", serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+
+  --animate-slide-up: slideUp 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-heartbeat: heartbeat 1.5s infinite;
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes heartbeat {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(109, 215, 153, 0.8);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(109, 215, 153, 0);
+    }
+  }
+}
+
+body {
+  background-color: var(--color-twilight-indigo);
+  color: var(--color-alice-blue);
+  font-family: var(--font-body);
+}
+
+/* Design system component classes */
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-fresh-sky);
+  color: var(--color-twilight-indigo);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid var(--color-fresh-sky);
+  transition: all 250ms ease;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--color-fresh-sky);
+  transform: scale(1.02);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.data-metric {
+  font-family: var(--font-fraunces);
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-emerald);
+}
+
+.hero-headline {
+  font-family: var(--font-fraunces);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -1px;
+  color: var(--color-alice-blue);
+}
+
+.nav-link {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: var(--color-alice-blue);
+  transition: color 200ms ease;
+}
+
+.nav-link:hover {
+  color: var(--color-fresh-sky);
+}
+
+.data-label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-alice-blue);
+  opacity: 0.8;
+}
+
+/* Desaturate map tiles */
+.mapboxgl-canvas-container canvas {
+  filter: saturate(0.4) brightness(0.95);
+}
