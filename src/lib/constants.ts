@@ -29,6 +29,17 @@ export const SAFETY_BANDS: SafetyBand[] = [
   { label: "High Risk", color: "#ef4444", min: 0, max: 19 },
 ];
 
+export const CANCER_TYPES = [
+  { value: "overall",  label: "All Cancers" },
+  { value: "brain",    label: "Brain" },
+  { value: "lung",     label: "Lung" },
+  { value: "breast",   label: "Breast" },
+  { value: "prostate", label: "Prostate" },
+  { value: "colon",    label: "Colon" },
+] as const;
+
+export type CancerTypeValue = typeof CANCER_TYPES[number]["value"];
+
 export const MAPBOX_SCORE_INTERPOLATION = [
   "interpolate",
   ["linear"],

@@ -9,6 +9,7 @@ import {
 } from "@/lib/constants";
 import type { BoundingBox } from "@/types/geo";
 import type { CachedListing } from "@/types/listing";
+import type { CancerTypeValue } from "@/lib/constants";
 import ListingMarkers from "./ListingMarkers";
 import FloodOverlay from "./FloodOverlay";
 import CancerOverlay from "./CancerOverlay";
@@ -18,6 +19,7 @@ interface MapContainerProps {
   overlays: { flood: boolean; cancer: boolean; listings: boolean };
   floodGeoJSON?: GeoJSON.FeatureCollection;
   cancerGeoJSON?: GeoJSON.FeatureCollection;
+  cancerType?: CancerTypeValue;
   onBoundsChange: (bounds: BoundingBox, zoom: number) => void;
   onSelectListing: (listing: CachedListing) => void;
   onFlyToReady?: (flyTo: (lat: number, lng: number, zoom?: number) => void) => void;
@@ -28,6 +30,7 @@ export default function MapContainer({
   overlays,
   floodGeoJSON,
   cancerGeoJSON,
+  cancerType,
   onBoundsChange,
   onSelectListing,
   onFlyToReady,
@@ -126,7 +129,7 @@ export default function MapContainer({
             />
           )}
           {overlays.flood && <FloodOverlay map={mapInstance} geojson={floodGeoJSON} />}
-          {overlays.cancer && <CancerOverlay map={mapInstance} geojson={cancerGeoJSON} />}
+          {overlays.cancer && <CancerOverlay map={mapInstance} geojson={cancerGeoJSON} cancerType={cancerType} />}
         </>
       )}
     </div>

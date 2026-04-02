@@ -118,6 +118,19 @@ export function normalizePropertyType(rentcastType?: string): HomeType | null {
   return HOME_TYPE_FROM_RENTCAST[rentcastType] ?? null;
 }
 
+async function fetchWithRetry(url: string, options: RequestInit, retries = 2): Promise<Response> {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await fetch(url, options);
+    } catch (err) {
+      if (attempt === retries) throw err;
+      // Brief pause before retry — gives stale connections time to close
+      await new Promise((r) => setTimeout(r, 300 * (attempt + 1)));
+    }
+  }
+  throw new Error("fetchWithRetry: unreachable");
+}
+
 export async function searchListings(
   bbox: BoundingBox,
   filters?: ListingFilters
@@ -139,7 +152,7 @@ export async function searchListings(
     if (types.length) params.set("propertyType", types.join(","));
   }
 
-  const res = await fetch(`${BASE_URL}/listings/sale?${params}`, {
+  const res = await fetchWithRetry(`${BASE_URL}/listings/sale?${params}`, {
     headers: getHeaders(),
   });
 
@@ -151,7 +164,7 @@ export async function searchListings(
 }
 
 export async function getListingById(id: string): Promise<RentcastListing> {
-  const res = await fetch(
+  const res = await fetchWithRetry(
     `${BASE_URL}/listings/sale/${encodeURIComponent(id)}`,
     { headers: getHeaders() }
   );
@@ -165,7 +178,7 @@ export async function getListingById(id: string): Promise<RentcastListing> {
 
 export async function lookupProperty(address: string): Promise<RentcastProperty> {
   const params = new URLSearchParams({ address });
-  const res = await fetch(`${BASE_URL}/properties?${params}`, {
+  const res = await fetchWithRetry(`${BASE_URL}/properties?${params}`, {
     headers: getHeaders(),
   });
 

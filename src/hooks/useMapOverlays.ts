@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { DEMO_MODE } from "@/lib/constants";
+import type { CancerTypeValue } from "@/lib/constants";
 import { MOCK_FLOOD_GEOJSON, MOCK_CANCER_GEOJSON } from "@/lib/mock-data";
 
 export interface OverlayState {
@@ -19,6 +20,7 @@ export function useMapOverlays() {
 
   const [floodGeoJSON, setFloodGeoJSON] = useState<GeoJSON.FeatureCollection | null>(null);
   const [cancerGeoJSON, setCancerGeoJSON] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [cancerType, setCancerType] = useState<CancerTypeValue>("overall");
 
   // Fetch flood GeoJSON when toggled on
   useEffect(() => {
@@ -54,5 +56,5 @@ export function useMapOverlays() {
     setOverlays((prev) => ({ ...prev, [layer]: !prev[layer] }));
   }, []);
 
-  return { overlays, toggleOverlay, floodGeoJSON, cancerGeoJSON };
+  return { overlays, toggleOverlay, floodGeoJSON, cancerGeoJSON, cancerType, setCancerType };
 }

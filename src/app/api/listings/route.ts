@@ -146,9 +146,13 @@ export async function GET(req: NextRequest) {
           safety_score: scores.total,
         };
 
-        await supabase
+        const { error: upsertError } = await supabase
           .from("listings")
           .upsert(listing, { onConflict: "external_id" });
+
+        if (upsertError) {
+          console.error("Listing upsert failed:", upsertError.message, upsertError.details);
+        }
 
         return listing;
       })

@@ -2,12 +2,16 @@
 
 import AddressSearch from "./AddressSearch";
 import type { CachedListing } from "@/types/listing";
+import { CANCER_TYPES } from "@/lib/constants";
+import type { CancerTypeValue } from "@/lib/constants";
 
 interface HeaderProps {
   overlays: { flood: boolean; cancer: boolean; listings: boolean };
   onToggleOverlay: (layer: "flood" | "cancer" | "listings") => void;
   onPropertyFound: (property: CachedListing) => void;
   remainingRequests?: number;
+  cancerType: CancerTypeValue;
+  onCancerTypeChange: (type: CancerTypeValue) => void;
 }
 
 export default function Header({
@@ -15,6 +19,8 @@ export default function Header({
   onToggleOverlay,
   onPropertyFound,
   remainingRequests,
+  cancerType,
+  onCancerTypeChange,
 }: HeaderProps) {
   return (
     <header className="flex items-center gap-4 px-6 py-3 bg-twilight-indigo border-b-2 border-sapphire-sky z-50 relative">
@@ -25,7 +31,7 @@ export default function Header({
         onPropertyFound={onPropertyFound}
         remainingRequests={remainingRequests}
       />
-      <nav className="flex gap-4 flex-shrink-0">
+      <nav className="flex gap-4 flex-shrink-0 items-center">
         <ToggleButton
           active={overlays.listings}
           onClick={() => onToggleOverlay("listings")}
@@ -38,12 +44,27 @@ export default function Header({
         >
           Flood Zones
         </ToggleButton>
-        <ToggleButton
-          active={overlays.cancer}
-          onClick={() => onToggleOverlay("cancer")}
-        >
-          Cancer Risk
-        </ToggleButton>
+        <div className="flex items-center gap-2">
+          <ToggleButton
+            active={overlays.cancer}
+            onClick={() => onToggleOverlay("cancer")}
+          >
+            Cancer Risk
+          </ToggleButton>
+          {overlays.cancer && (
+            <select
+              value={cancerType}
+              onChange={(e) => onCancerTypeChange(e.target.value as CancerTypeValue)}
+              className="bg-dusk-blue text-alice-blue border-2 border-sapphire-sky text-xs font-semibold uppercase tracking-wider px-2 py-1.5 focus:outline-none focus:border-fresh-sky"
+            >
+              {CANCER_TYPES.map((t) => (
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
       </nav>
     </header>
   );
