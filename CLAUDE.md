@@ -80,6 +80,28 @@ npm test -- path/to/test.test.ts
 
 Data ingestion scripts: `scripts/ingest-*.ts` (one-time setup for census, cancer, flood data).
 
+## Supabase CLI Workflow
+
+Supabase CLI is installed at `/usr/local/bin/supabase` and linked to project ref `fqazzecpgzqzfsaehwtl`.
+Docker Desktop must be running for local stack commands.
+
+```bash
+supabase start                                                        # Start local stack (required for db diff)
+supabase stop                                                         # Stop local stack
+
+supabase migration new <name>                                         # Create a new migration file
+supabase db diff                                                      # Diff local schema vs migrations (requires supabase start)
+supabase db push                                                      # Push local migrations to remote
+supabase db pull                                                      # Pull remote schema changes
+
+supabase gen types typescript --linked > src/types/database.ts       # Regenerate TypeScript types from live DB
+```
+
+**TypeScript types:** `src/types/database.ts` is auto-generated — do not edit manually. Regenerate after any schema change.
+Both Supabase clients (`src/lib/supabase/client.ts`, `src/lib/supabase/server.ts`) are typed with `Database`.
+
+**Migration naming:** Files in `supabase/migrations/` must have unique numeric prefixes (e.g. `001_`, `002_`). Duplicate prefixes cause `db diff` to fail.
+
 ## Development Phases
 
 1. Scaffold & Map — Next.js + Mapbox

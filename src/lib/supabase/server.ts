@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import type { Database } from "@/types/database";
 
 export async function createServerSupabaseClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -9,7 +10,7 @@ export async function createServerSupabaseClient() {
   if (!url || !key) return null;
 
   const cookieStore = await cookies();
-  return createServerClient(url, key, {
+  return createServerClient<Database>(url, key, {
     cookies: {
       getAll: () => cookieStore.getAll(),
       setAll: (cookiesToSet) => {
@@ -31,5 +32,5 @@ export function createServiceClient() {
 
   if (!url || !serviceKey) return null;
 
-  return createClient(url, serviceKey);
+  return createClient<Database>(url, serviceKey);
 }
