@@ -13,12 +13,14 @@ import type { CancerTypeValue } from "@/lib/constants";
 import ListingMarkers from "./ListingMarkers";
 import FloodOverlay from "./FloodOverlay";
 import CancerOverlay from "./CancerOverlay";
+import FacilityOverlay from "./FacilityOverlay";
 
 interface MapContainerProps {
   listings: CachedListing[];
-  overlays: { flood: boolean; cancer: boolean; listings: boolean };
+  overlays: { flood: boolean; cancer: boolean; listings: boolean; facilities: boolean };
   floodGeoJSON?: GeoJSON.FeatureCollection;
   cancerGeoJSON?: GeoJSON.FeatureCollection;
+  facilitiesGeoJSON?: GeoJSON.FeatureCollection;
   cancerType?: CancerTypeValue;
   onBoundsChange: (bounds: BoundingBox, zoom: number) => void;
   onSelectListing: (listing: CachedListing) => void;
@@ -30,6 +32,7 @@ export default function MapContainer({
   overlays,
   floodGeoJSON,
   cancerGeoJSON,
+  facilitiesGeoJSON,
   cancerType,
   onBoundsChange,
   onSelectListing,
@@ -130,6 +133,7 @@ export default function MapContainer({
           )}
           {overlays.flood && <FloodOverlay map={mapInstance} geojson={floodGeoJSON} />}
           {overlays.cancer && <CancerOverlay map={mapInstance} geojson={cancerGeoJSON} cancerType={cancerType} />}
+          {overlays.facilities && <FacilityOverlay map={mapInstance} geojson={facilitiesGeoJSON} />}
         </>
       )}
     </div>

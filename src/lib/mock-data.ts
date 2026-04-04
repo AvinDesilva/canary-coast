@@ -282,6 +282,37 @@ export const MOCK_CANCER_GEOJSON: GeoJSON.FeatureCollection = {
   ],
 };
 
+export const MOCK_FACILITIES_GEOJSON: GeoJSON.FeatureCollection = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      properties: { name: "BAYTOWN CHEMICAL PLANT", category: "carcinogenic", total_emissions: 12292766 },
+      geometry: { type: "Point", coordinates: [-95.07, 29.74] },
+    },
+    {
+      type: "Feature",
+      properties: { name: "DEER PARK ENERGY CENTER", category: "carcinogenic", total_emissions: 4456233 },
+      geometry: { type: "Point", coordinates: [-95.13, 29.72] },
+    },
+    {
+      type: "Feature",
+      properties: { name: "DEER PARK CHEMICALS", category: "carcinogenic", total_emissions: 4148577 },
+      geometry: { type: "Point", coordinates: [-95.13, 29.71] },
+    },
+    {
+      type: "Feature",
+      properties: { name: "BAYTOWN OLEFINS PLANT", category: "noncarcinogenic", total_emissions: null },
+      geometry: { type: "Point", coordinates: [-95.01, 29.76] },
+    },
+    {
+      type: "Feature",
+      properties: { name: "CEDAR BAYOU PLANT", category: "noncarcinogenic", total_emissions: null },
+      geometry: { type: "Point", coordinates: [-94.92, 29.82] },
+    },
+  ],
+};
+
 export const MOCK_ZIP_CANCER_DATA: ZipCancerRecord[] = [
   { zip_code: "77006", cancer_type: "all", year_start: 2013, year_end: 2021, sir: 0.72, observed_cases: 145, expected_cases: 201, confidence_low: 0.61, confidence_high: 0.85 },
   { zip_code: "77006", cancer_type: "lung", year_start: 2013, year_end: 2021, sir: 0.68, observed_cases: 22, expected_cases: 32, confidence_low: 0.43, confidence_high: 1.03 },

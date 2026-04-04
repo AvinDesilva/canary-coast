@@ -3,12 +3,13 @@
 import { useState, useCallback, useEffect } from "react";
 import { DEMO_MODE } from "@/lib/constants";
 import type { CancerTypeValue } from "@/lib/constants";
-import { MOCK_FLOOD_GEOJSON, MOCK_CANCER_GEOJSON } from "@/lib/mock-data";
+import { MOCK_FLOOD_GEOJSON, MOCK_CANCER_GEOJSON, MOCK_FACILITIES_GEOJSON } from "@/lib/mock-data";
 
 export interface OverlayState {
   flood: boolean;
   cancer: boolean;
   listings: boolean;
+  facilities: boolean;
 }
 
 export function useMapOverlays() {
@@ -16,10 +17,12 @@ export function useMapOverlays() {
     flood: false,
     cancer: false,
     listings: true,
+    facilities: false,
   });
 
   const [floodGeoJSON, setFloodGeoJSON] = useState<GeoJSON.FeatureCollection | null>(null);
   const [cancerGeoJSON, setCancerGeoJSON] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [facilitiesGeoJSON, setFacilitiesGeoJSON] = useState<GeoJSON.FeatureCollection | null>(null);
   const [cancerType, setCancerType] = useState<CancerTypeValue>("overall");
 
   // Fetch flood GeoJSON when toggled on
@@ -52,9 +55,24 @@ export function useMapOverlays() {
       .catch(console.error);
   }, [overlays.cancer, cancerGeoJSON]);
 
+  // Fetch facilities GeoJSON when toggled on
+  useEffect(() => {
+    if (!overlays.facilities || facilitiesGeoJSON) return;
+
+    if (DEMO_MODE) {
+      Promise.resolve().then(() => setFacilitiesGeoJSON(MOCK_FACILITIES_GEOJSON));
+      return;
+    }
+
+    fetch("/api/overlays/facilities")
+      .then((r) => r.json())
+      .then(setFacilitiesGeoJSON)
+      .catch(console.error);
+  }, [overlays.facilities, facilitiesGeoJSON]);
+
   const toggleOverlay = useCallback((layer: keyof OverlayState) => {
     setOverlays((prev) => ({ ...prev, [layer]: !prev[layer] }));
   }, []);
 
-  return { overlays, toggleOverlay, floodGeoJSON, cancerGeoJSON, cancerType, setCancerType };
+  return { overlays, toggleOverlay, floodGeoJSON, cancerGeoJSON, facilitiesGeoJSON, cancerType, setCancerType };
 }
