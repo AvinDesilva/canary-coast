@@ -62,7 +62,8 @@ export default function CancerOverlay({ map, geojson, cancerType = "overall" }: 
   // Update paint expression when cancer type changes (layer already exists)
   useEffect(() => {
     if (!map.getLayer(LAYER_ID)) return;
-    map.setPaintProperty(LAYER_ID, "fill-color", buildColorExpression(cancerType));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    map.setPaintProperty(LAYER_ID, "fill-color", buildColorExpression(cancerType) as any);
   }, [map, cancerType]);
 
   return null;

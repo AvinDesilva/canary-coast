@@ -252,6 +252,42 @@ export type Database = {
         }
         Relationships: []
       }
+      pollutant_facilities: {
+        Row: {
+          category: string
+          data_source: string | null
+          id: string
+          ingested_at: string | null
+          latitude: number
+          longitude: number
+          point: unknown
+          site_name: string
+          total_emissions: number | null
+        }
+        Insert: {
+          category: string
+          data_source?: string | null
+          id?: string
+          ingested_at?: string | null
+          latitude: number
+          longitude: number
+          point: unknown
+          site_name: string
+          total_emissions?: number | null
+        }
+        Update: {
+          category?: string
+          data_source?: string | null
+          id?: string
+          ingested_at?: string | null
+          latitude?: number
+          longitude?: number
+          point?: unknown
+          site_name?: string
+          total_emissions?: number | null
+        }
+        Relationships: []
+      }
       search_cache: {
         Row: {
           bbox: unknown
@@ -746,6 +782,7 @@ export type Database = {
           year_start: number
         }[]
       }
+      get_facilities_geojson: { Args: never; Returns: Json }
       get_flood_geojson: { Args: never; Returns: Json }
       get_listings_in_bbox: {
         Args: {
