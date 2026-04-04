@@ -62,6 +62,11 @@ export default function Home() {
           onCancerTypeChange={setCancerType}
         />
         <div className="flex-1 flex overflow-hidden">
+          <ListingPanel
+            listings={listings}
+            loading={loading}
+            onSelectListing={handleSelectListing}
+          />
           <div className="flex-1 relative">
             <MapContainer
               listings={listings}
@@ -76,11 +81,6 @@ export default function Home() {
             />
             <ScoreLegend />
           </div>
-          <ListingPanel
-            listings={listings}
-            loading={loading}
-            onSelectListing={handleSelectListing}
-          />
         </div>
         {selectedListing && (
           <ListingDetail

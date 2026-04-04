@@ -73,7 +73,7 @@ export default function MapContainer({
       ],
     });
 
-    m.addControl(new mapboxgl.NavigationControl(), "top-left");
+    m.addControl(new mapboxgl.NavigationControl(), "bottom-right");
 
     m.on("load", () => {
       setMapInstance(m);
