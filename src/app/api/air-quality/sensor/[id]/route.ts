@@ -67,12 +67,13 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
 
     // Store in Supabase cache (fire-and-forget)
     if (supabase) {
-      supabase
+      void supabase
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from("air_quality_history_cache" as any)
         .upsert({ sensor_index: sensorIndex, aqi_monthly, aqi_yearly, cached_at: new Date().toISOString() })
-        .then(() => {})
-        .catch((err: unknown) => console.error("AQ history cache write error:", err));
+        .then(({ error }: { error: unknown }) => {
+          if (error) console.error("AQ history cache write error:", error);
+        });
     }
 
     return NextResponse.json({ aqi_monthly, aqi_yearly }, { headers: { "X-AQ-History-Cache": "miss" } });
