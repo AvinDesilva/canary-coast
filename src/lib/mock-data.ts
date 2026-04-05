@@ -1,5 +1,6 @@
 import type { CachedListing } from "@/types/listing";
 import type { ZipCancerRecord } from "@/types/safety";
+import type { AirQualityReading } from "@/types/air-quality";
 
 const now = new Date().toISOString();
 const exp = new Date(Date.now() + 86400000 * 7).toISOString();
@@ -59,6 +60,34 @@ function listing(
     expires_at: exp,
   };
 }
+
+export const MOCK_AIR_QUALITY: AirQualityReading = {
+  aqi: 22,
+  bucket: "Good",
+  description: "AQI 0–50 (EPA: Good). PM2.5 below 9 µg/m³. Satisfactory air quality for all groups.",
+  pm25_corrected: 5.1,
+  pm25_raw: 8.4,
+  humidity: 65,
+  sensor_name: "Montrose Community Park",
+  sensor_distance_mi: 0.8,
+  fetched_at: new Date().toISOString(),
+};
+
+export const MOCK_AIR_QUALITY_GEOJSON: GeoJSON.FeatureCollection = {
+  type: "FeatureCollection",
+  features: [
+    { type: "Feature", geometry: { type: "Point", coordinates: [-95.3908, 29.7355] }, properties: { sensor_index: 10001, name: "Montrose Community Park", aqi: 22, aqi_weekly: 25, bucket: "Good", description: "AQI 0–50 (EPA: Good). PM2.5 below 9 µg/m³. Satisfactory air quality for all groups.", pm25_corrected: 5.1, pm25_raw: 8.4, humidity: 65 } },
+    { type: "Feature", geometry: { type: "Point", coordinates: [-95.3965, 29.7902] }, properties: { sensor_index: 10002, name: "Heights Station", aqi: 14, aqi_weekly: 18, bucket: "Good", description: "AQI 0–50 (EPA: Good). PM2.5 below 9 µg/m³. Satisfactory air quality for all groups.", pm25_corrected: 3.2, pm25_raw: 5.1, humidity: 58 } },
+    { type: "Feature", geometry: { type: "Point", coordinates: [-95.4318, 29.7501] }, properties: { sensor_index: 10003, name: "River Oaks Monitor", aqi: 31, aqi_weekly: 28, bucket: "Good", description: "AQI 0–50 (EPA: Good). PM2.5 below 9 µg/m³. Satisfactory air quality for all groups.", pm25_corrected: 6.8, pm25_raw: 10.2, humidity: 70 } },
+    { type: "Feature", geometry: { type: "Point", coordinates: [-95.6153, 29.7721] }, properties: { sensor_index: 10004, name: "Energy Corridor West", aqi: 19, aqi_weekly: 22, bucket: "Good", description: "AQI 0–50 (EPA: Good). PM2.5 below 9 µg/m³. Satisfactory air quality for all groups.", pm25_corrected: 4.5, pm25_raw: 7.1, humidity: 62 } },
+    { type: "Feature", geometry: { type: "Point", coordinates: [-95.3950, 29.8742] }, properties: { sensor_index: 10005, name: "Greenspoint Industrial", aqi: 58, aqi_weekly: 64, bucket: "Moderate", description: "AQI 51–100 (EPA: Moderate). PM2.5 9–35 µg/m³. Acceptable; sensitive individuals may reduce prolonged outdoor exertion.", pm25_corrected: 11.2, pm25_raw: 18.5, humidity: 72 } },
+    { type: "Feature", geometry: { type: "Point", coordinates: [-95.2018, 29.6892] }, properties: { sensor_index: 10006, name: "Pasadena East", aqi: 72, aqi_weekly: 78, bucket: "Moderate", description: "AQI 51–100 (EPA: Moderate). PM2.5 9–35 µg/m³. Acceptable; sensitive individuals may reduce prolonged outdoor exertion.", pm25_corrected: 14.8, pm25_raw: 23.1, humidity: 68 } },
+    { type: "Feature", geometry: { type: "Point", coordinates: [-95.1751, 29.6718] }, properties: { sensor_index: 10007, name: "Baytown Refinery Row", aqi: 118, aqi_weekly: 109, bucket: "Unhealthy for Sensitive Groups", description: "AQI 101–150 (EPA: Unhealthy for Sensitive Groups). PM2.5 35–55 µg/m³. People with respiratory or heart conditions should limit outdoor activity.", pm25_corrected: 38.2, pm25_raw: 58.4, humidity: 74 } },
+    { type: "Feature", geometry: { type: "Point", coordinates: [-95.4382, 29.6835] }, properties: { sensor_index: 10008, name: "Meyerland", aqi: 28, aqi_weekly: 30, bucket: "Good", description: "AQI 0–50 (EPA: Good). PM2.5 below 9 µg/m³. Satisfactory air quality for all groups.", pm25_corrected: 6.1, pm25_raw: 9.8, humidity: 75 } },
+    { type: "Feature", geometry: { type: "Point", coordinates: [-95.5248, 29.8161] }, properties: { sensor_index: 10009, name: "Spring Branch Community", aqi: 45, aqi_weekly: 41, bucket: "Good", description: "AQI 0–50 (EPA: Good). PM2.5 below 9 µg/m³. Satisfactory air quality for all groups.", pm25_corrected: 9.0, pm25_raw: 14.2, humidity: 67 } },
+    { type: "Feature", geometry: { type: "Point", coordinates: [-95.0978, 29.5568] }, properties: { sensor_index: 10010, name: "Clear Lake NASA", aqi: 11, aqi_weekly: 14, bucket: "Good", description: "AQI 0–50 (EPA: Good). PM2.5 below 9 µg/m³. Satisfactory air quality for all groups.", pm25_corrected: 2.5, pm25_raw: 4.1, humidity: 60 } },
+  ],
+};
 
 export const MOCK_LISTINGS: CachedListing[] = [
   // ── Montrose / Midtown ─────────────────────────────────────────────────────

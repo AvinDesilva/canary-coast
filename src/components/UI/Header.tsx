@@ -6,8 +6,8 @@ import { CANCER_TYPES } from "@/lib/constants";
 import type { CancerTypeValue } from "@/lib/constants";
 
 interface HeaderProps {
-  overlays: { flood: boolean; cancer: boolean; listings: boolean; facilities: boolean };
-  onToggleOverlay: (layer: "flood" | "cancer" | "listings" | "facilities") => void;
+  overlays: { flood: boolean; cancer: boolean; listings: boolean; facilities: boolean; airQuality: boolean };
+  onToggleOverlay: (layer: "flood" | "cancer" | "listings" | "facilities" | "airQuality") => void;
   onPropertyFound: (property: CachedListing) => void;
   remainingRequests?: number;
   cancerType: CancerTypeValue;
@@ -49,6 +49,12 @@ export default function Header({
           onClick={() => onToggleOverlay("facilities")}
         >
           Facilities
+        </ToggleButton>
+        <ToggleButton
+          active={overlays.airQuality}
+          onClick={() => onToggleOverlay("airQuality")}
+        >
+          Air Quality
         </ToggleButton>
         <div className="flex items-center gap-2">
           <ToggleButton

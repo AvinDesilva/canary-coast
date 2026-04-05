@@ -39,6 +39,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      air_quality_history_cache: {
+        Row: {
+          aqi_monthly: number | null
+          aqi_yearly: number | null
+          cached_at: string
+          sensor_index: number
+        }
+        Insert: {
+          aqi_monthly?: number | null
+          aqi_yearly?: number | null
+          cached_at?: string
+          sensor_index: number
+        }
+        Update: {
+          aqi_monthly?: number | null
+          aqi_yearly?: number | null
+          cached_at?: string
+          sensor_index?: number
+        }
+        Relationships: []
+      }
       api_usage: {
         Row: {
           call_count: number

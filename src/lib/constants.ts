@@ -1,4 +1,5 @@
 import type { SafetyBand, FloodRiskLevel } from "@/types/safety";
+import type { AqiBucket } from "@/types/air-quality";
 
 export const DEMO_MODE = !process.env.NEXT_PUBLIC_SUPABASE_URL;
 
@@ -39,6 +40,35 @@ export const CANCER_TYPES = [
 ] as const;
 
 export type CancerTypeValue = typeof CANCER_TYPES[number]["value"];
+
+export const AQI_BUCKET_COLORS: Record<AqiBucket, string> = {
+  "Good":                           "#22c55e",
+  "Moderate":                       "#eab308",
+  "Unhealthy for Sensitive Groups": "#f97316",
+  "Unhealthy":                      "#ef4444",
+  "Very Unhealthy":                 "#7c3aed",
+  "Hazardous":                      "#7f1d1d",
+};
+
+export const AQI_BUCKETS: { label: AqiBucket; min: number; max: number; description: string }[] = [
+  { label: "Good",                           min: 0,   max: 50,  description: "AQI 0–50 (EPA: Good). PM2.5 below 9 µg/m³. Satisfactory air quality for all groups." },
+  { label: "Moderate",                       min: 51,  max: 100, description: "AQI 51–100 (EPA: Moderate). PM2.5 9–35 µg/m³. Acceptable; sensitive individuals may reduce prolonged outdoor exertion." },
+  { label: "Unhealthy for Sensitive Groups", min: 101, max: 150, description: "AQI 101–150 (EPA: Unhealthy for Sensitive Groups). PM2.5 35–55 µg/m³. People with respiratory or heart conditions should limit outdoor activity." },
+  { label: "Unhealthy",                      min: 151, max: 200, description: "AQI 151–200 (EPA: Unhealthy). PM2.5 55–125 µg/m³. Everyone may experience health effects; sensitive groups at greater risk." },
+  { label: "Very Unhealthy",                 min: 201, max: 300, description: "AQI 201–300 (EPA: Very Unhealthy). PM2.5 125–225 µg/m³. Health alert — everyone should avoid prolonged outdoor exertion." },
+  { label: "Hazardous",                      min: 301, max: 500, description: "AQI 301+ (EPA: Hazardous). PM2.5 above 225 µg/m³. Emergency health conditions; entire population affected." },
+];
+
+export const AQI_BREAKPOINTS = [
+  { pmLo: 0,     pmHi: 9.0,   aqiLo: 0,   aqiHi: 50  },
+  { pmLo: 9.1,   pmHi: 35.4,  aqiLo: 51,  aqiHi: 100 },
+  { pmLo: 35.5,  pmHi: 55.4,  aqiLo: 101, aqiHi: 150 },
+  { pmLo: 55.5,  pmHi: 125.4, aqiLo: 151, aqiHi: 200 },
+  { pmLo: 125.5, pmHi: 225.4, aqiLo: 201, aqiHi: 300 },
+  { pmLo: 225.5, pmHi: 325.4, aqiLo: 301, aqiHi: 500 },
+] as const;
+
+export const PURPLEAIR_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 export const MAPBOX_SCORE_INTERPOLATION = [
   "interpolate",

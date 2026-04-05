@@ -8,6 +8,7 @@ import CancerTrend from "@/components/Safety/CancerTrend";
 import { MOCK_ZIP_CANCER_DATA } from "@/lib/mock-data";
 import { DEMO_MODE } from "@/lib/constants";
 import type { FloodRiskLevel } from "@/types/safety";
+import AirQualityCard from "@/components/Safety/AirQualityCard";
 
 interface ListingDetailProps {
   listing: CachedListing;
@@ -99,6 +100,9 @@ export default function ListingDetail({
           />
         </div>
 
+        {/* Air Quality */}
+        <AirQualityCard lat={listing.latitude} lng={listing.longitude} />
+
         {/* Flood Info */}
         {listing.flood_zone_code && (
           <div className="border-2 border-sapphire-sky p-4">
@@ -125,9 +129,9 @@ export default function ListingDetail({
         {/* Attribution */}
         <div className="text-alice-blue/30 pb-4" style={{ fontSize: "9px" }}>
           Cancer data: Harris County Public Health / Texas Cancer Registry
-          (DSHS). Flood data: FEMA National Flood Hazard Layer. Safety scores
-          are informational only. Consult professionals before making purchasing
-          decisions.
+          (DSHS). Flood data: FEMA National Flood Hazard Layer. Air quality:
+          PurpleAir (EPA-corrected). Safety scores are informational only.
+          Consult professionals before making purchasing decisions.
         </div>
       </div>
     </div>

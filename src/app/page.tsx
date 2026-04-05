@@ -24,7 +24,7 @@ export default function Home() {
   const [remainingRequests, setRemainingRequests] = useState<number | undefined>(undefined);
   const flyToRef = useRef<((lat: number, lng: number, zoom?: number) => void) | null>(null);
 
-  const { overlays, toggleOverlay, floodGeoJSON, cancerGeoJSON, facilitiesGeoJSON, cancerType, setCancerType } = useMapOverlays();
+  const { overlays, toggleOverlay, floodGeoJSON, cancerGeoJSON, facilitiesGeoJSON, airQualityGeoJSON, cancerType, setCancerType } = useMapOverlays();
   const { listings, loading } = useMapListings(bounds, zoom, setRemainingRequests);
 
   const handleBoundsChange = useCallback((newBounds: BoundingBox, newZoom: number) => {
@@ -74,6 +74,7 @@ export default function Home() {
               floodGeoJSON={floodGeoJSON ?? undefined}
               cancerGeoJSON={cancerGeoJSON ?? undefined}
               facilitiesGeoJSON={facilitiesGeoJSON ?? undefined}
+            airQualityGeoJSON={airQualityGeoJSON ?? undefined}
               cancerType={cancerType}
               onBoundsChange={handleBoundsChange}
               onSelectListing={handleSelectListing}
