@@ -104,6 +104,25 @@ export default function MapContainer({
     };
   }, [token, handleMoveEnd, onBoundsChange, onFlyToReady]);
 
+  // Mapbox GL v3 uses window.resize (not ResizeObserver) for trackResize.
+  // Debounce so map.resize() fires once after CSS transitions settle, not on
+  // every animation frame (which clears the WebGL buffer and causes flickering).
+  useEffect(() => {
+    if (!mapInstance || !mapContainer.current) return;
+    let timeout: ReturnType<typeof setTimeout>;
+    const observer = new ResizeObserver(() => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        mapInstance.resize();
+      }, 50);
+    });
+    observer.observe(mapContainer.current);
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeout);
+    };
+  }, [mapInstance]);
+
   if (!token) {
     return (
       <div className="flex-1 bg-dusk-blue border-2 border-sapphire-sky flex items-center justify-center">

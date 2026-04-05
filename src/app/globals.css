@@ -121,3 +121,11 @@ body {
 .mapboxgl-canvas-container canvas {
   filter: saturate(0.4) brightness(0.95);
 }
+
+/* Keep the Mapbox canvas filling its container during CSS transitions.
+   Without this, the canvas stays at its initialised pixel-width while the
+   flex container grows (panel collapse/expand), showing the body background. */
+.mapboxgl-canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
