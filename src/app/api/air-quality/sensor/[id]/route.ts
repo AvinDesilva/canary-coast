@@ -46,11 +46,12 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       .single();
 
     if (cached) {
-      const ageHours = (Date.now() - new Date((cached as { cached_at: string }).cached_at).getTime()) / 3_600_000;
+      const row = cached as unknown as { cached_at: string; aqi_monthly: number | null; aqi_yearly: number | null };
+      const ageHours = (Date.now() - new Date(row.cached_at).getTime()) / 3_600_000;
       if (ageHours < CACHE_TTL_HOURS) {
         return NextResponse.json({
-          aqi_monthly: (cached as { aqi_monthly: number | null }).aqi_monthly,
-          aqi_yearly: (cached as { aqi_yearly: number | null }).aqi_yearly,
+          aqi_monthly: row.aqi_monthly,
+          aqi_yearly: row.aqi_yearly,
         }, { headers: { "X-AQ-History-Cache": "hit" } });
       }
     }
