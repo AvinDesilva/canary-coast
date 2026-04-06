@@ -67,7 +67,7 @@ export default function MapContainer({
 
     const m = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/light-v11",
+      style: "mapbox://styles/mapbox/dark-v11",
       center: [HARRIS_COUNTY_CENTER.lng, HARRIS_COUNTY_CENTER.lat],
       zoom: DEFAULT_ZOOM,
       maxBounds: [
