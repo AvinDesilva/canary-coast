@@ -42,7 +42,9 @@ export default function ListingCard({
               .join(" \u00b7 ")}
           </div>
         </div>
-        <SafetyBadge score={listing.safety_score} size="sm" />
+        <div title="Composite Safety Score: FEMA flood zone risk (60%) + cancer incidence rate (40%). Higher score = lower measured risk.">
+          <SafetyBadge score={listing.safety_score} size="sm" />
+        </div>
       </div>
     </button>
   );

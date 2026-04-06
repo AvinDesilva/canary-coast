@@ -47,7 +47,7 @@ export default function AirQualityCard({ lat, lng }: AirQualityCardProps) {
               {data.bucket.toUpperCase()}
             </span>
             <Tooltip
-              content={`PM2.5: ${data.pm25_corrected} µg/m³ (raw: ${data.pm25_raw}) · Humidity: ${data.humidity}%`}
+              content={`PM2.5: ${data.pm25_corrected} µg/m³ (uncorrected sensor: ${data.pm25_raw} µg/m³) · Humidity: ${data.humidity}%`}
             >
               <span className="text-alice-blue/40 text-xs cursor-default select-none border border-alice-blue/20 rounded-full w-4 h-4 inline-flex items-center justify-center leading-none">
                 i

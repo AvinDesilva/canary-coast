@@ -59,14 +59,15 @@ export default function FacilityOverlay({ map, geojson }: FacilityOverlayProps) 
 
       const categoryLabel =
         category === "carcinogenic"
-          ? `<span style="color:#ef4444;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em">Cancer-linked pollutants</span>`
-          : `<span style="color:#f97316;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em">Non-cancer pollutants</span>`;
+          ? `<span style="color:#ef4444;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em">EPA-classified hazardous air pollutants (HAPs)</span>`
+          : `<span style="color:#f97316;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em">Non-carcinogenic air pollutants</span>`;
 
       const html = `
         <div style="background:#273A71;border:2px solid #3A70BA;padding:10px 12px;font-family:sans-serif;min-width:180px">
           <div style="color:#D6DEE9;font-size:12px;font-weight:700;margin-bottom:4px">${name}</div>
           ${categoryLabel}
           ${emissionsLine}
+          <div style="color:#D6DEE9;opacity:0.4;font-size:9px;margin-top:6px">Source: EPA Toxics Release Inventory (TRI)</div>
         </div>
       `;
 

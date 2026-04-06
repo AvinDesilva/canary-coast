@@ -21,8 +21,11 @@ export default function ScoreLegend() {
           </div>
         ))}
       </div>
-      <div className="mt-2 pt-2 border-t border-sapphire-sky/50 text-alice-blue/40" style={{ fontSize: "9px" }}>
-        Cancer: HCPH/TX Cancer Registry | Flood: FEMA NFHL
+      <div className="mt-2 pt-2 border-t border-sapphire-sky/50 text-alice-blue/40 space-y-1" style={{ fontSize: "9px" }}>
+        <div>Cancer: HCPH/TX Cancer Registry | Flood: FEMA NFHL</div>
+        <div className="leading-tight">
+          Cancer overlay shows Standardized Incidence Ratio (SIR) per census tract vs. Texas average. Reflects environmental exposure patterns — not neighborhood quality.
+        </div>
       </div>
     </div>
   );

@@ -89,7 +89,7 @@ export default function ListingDetail({
               <div className="font-fraunces text-2xl font-bold" style={{ color: band?.color }}>
                 {band?.label ?? "Unknown"}
               </div>
-              <div className="text-xs text-alice-blue/50">
+              <div className="text-xs text-alice-blue/50" title="Methodology: FEMA flood zone classification (60%) + Harris County cancer incidence SIR (40%). Weights are developer-defined estimates, not published standards. Scores are informational only.">
                 Composite Safety Score
               </div>
             </div>
@@ -127,11 +127,16 @@ export default function ListingDetail({
         </div>
 
         {/* Attribution */}
-        <div className="text-alice-blue/30 pb-4" style={{ fontSize: "9px" }}>
-          Cancer data: Harris County Public Health / Texas Cancer Registry
-          (DSHS). Flood data: FEMA National Flood Hazard Layer. Air quality:
-          PurpleAir (EPA-corrected). Safety scores are informational only.
-          Consult professionals before making purchasing decisions.
+        <div className="text-alice-blue/30 pb-4 space-y-1" style={{ fontSize: "9px" }}>
+          <div>
+            Cancer data: Harris County Public Health / Texas Cancer Registry (DSHS).
+            Flood data: FEMA National Flood Hazard Layer. Air quality: PurpleAir (EPA-corrected).
+          </div>
+          <div>
+            Score methodology: FEMA flood zone (60%) + cancer SIR (40%). Weights are
+            developer-defined estimates, not published standards.
+          </div>
+          <div>Safety scores are informational only. Consult professionals before making purchasing decisions.</div>
         </div>
       </div>
     </div>
