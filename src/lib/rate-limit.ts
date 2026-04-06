@@ -12,8 +12,8 @@ export async function canMakeRequest(supabase: SupabaseClient): Promise<boolean>
     const row = data?.[0];
     return (row?.remaining ?? MONTHLY_LIMIT) > 0;
   } catch {
-    // Fail open — allow the request if we can't check
-    return true;
+    // Fail closed — deny the request if we can't verify the limit
+    return false;
   }
 }
 

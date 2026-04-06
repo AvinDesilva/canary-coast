@@ -53,6 +53,15 @@ interface AirQualityOverlayProps {
   geojson?: GeoJSON.FeatureCollection;
 }
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export default function AirQualityOverlay({ map, geojson }: AirQualityOverlayProps) {
   const popupRef = useRef<mapboxgl.Popup | null>(null);
 
@@ -77,17 +86,17 @@ export default function AirQualityOverlay({ map, geojson }: AirQualityOverlayPro
 
       return `
         <div style="background:#273A71;border:2px solid #3A70BA;padding:10px 12px;font-family:sans-serif;min-width:200px">
-          <div style="color:#D6DEE9;font-size:12px;font-weight:700;margin-bottom:6px">${props.name}</div>
+          <div style="color:#D6DEE9;font-size:12px;font-weight:700;margin-bottom:6px">${escapeHtml(props.name)}</div>
           <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
             <span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span>
             <span style="color:${color};font-size:13px;font-weight:800;letter-spacing:0.05em">${bucket.toUpperCase()}</span>
-            <span style="color:#D6DEE9;font-size:18px;font-weight:800;margin-left:auto">AQI ${props.aqi}</span>
+            <span style="color:#D6DEE9;font-size:18px;font-weight:800;margin-left:auto">AQI ${escapeHtml(props.aqi)}</span>
           </div>
-          <div style="color:#D6DEE9;font-size:10px;opacity:0.7;margin-bottom:8px">${props.description}</div>
+          <div style="color:#D6DEE9;font-size:10px;opacity:0.7;margin-bottom:8px">${escapeHtml(props.description)}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:6px">
             <div style="text-align:center;background:#1e2d5a;border-radius:4px;padding:4px 6px">
               <div style="color:#D6DEE9;font-size:9px;opacity:0.5;text-transform:uppercase;letter-spacing:0.05em">7-day avg</div>
-              <div style="color:#D6DEE9;font-size:14px;font-weight:800">${props.aqi_weekly != null ? props.aqi_weekly : '<span style="opacity:0.4">N/A</span>'}</div>
+              <div style="color:#D6DEE9;font-size:14px;font-weight:800">${props.aqi_weekly != null ? escapeHtml(props.aqi_weekly) : '<span style="opacity:0.4">N/A</span>'}</div>
             </div>
             <div style="text-align:center;background:#1e2d5a;border-radius:4px;padding:4px 6px">
               <div style="color:#D6DEE9;font-size:9px;opacity:0.5;text-transform:uppercase;letter-spacing:0.05em">1-mo avg</div>
@@ -98,7 +107,7 @@ export default function AirQualityOverlay({ map, geojson }: AirQualityOverlayPro
               <div style="color:#D6DEE9;font-size:14px;font-weight:800">${avg(aqi_yearly)}</div>
             </div>
           </div>
-          <div style="color:#D6DEE9;font-size:9px;opacity:0.4">PM2.5: ${props.pm25_corrected} µg/m³ (uncorrected sensor: ${props.pm25_raw} µg/m³) · RH: ${props.humidity}%</div>
+          <div style="color:#D6DEE9;font-size:9px;opacity:0.4">PM2.5: ${escapeHtml(props.pm25_corrected)} µg/m³ (uncorrected sensor: ${escapeHtml(props.pm25_raw)} µg/m³) · RH: ${escapeHtml(props.humidity)}%</div>
         </div>
       `;
     };

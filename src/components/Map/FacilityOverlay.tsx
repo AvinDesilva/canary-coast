@@ -52,6 +52,15 @@ interface FacilityOverlayProps {
   geojson?: GeoJSON.FeatureCollection;
 }
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export default function FacilityOverlay({ map, geojson }: FacilityOverlayProps) {
   const popupRef = useRef<mapboxgl.Popup | null>(null);
 
@@ -65,7 +74,7 @@ export default function FacilityOverlay({ map, geojson }: FacilityOverlayProps) 
       const props = e.features[0].properties;
       if (!props) return;
 
-      const name = props.name as string;
+      const name = escapeHtml(props.name);
       const category = props.category as string;
       const emissions = props.total_emissions as number | null;
 

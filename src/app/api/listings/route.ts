@@ -22,6 +22,13 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  if (latMin >= latMax || lngMin >= lngMax) {
+    return NextResponse.json(
+      { error: "Invalid bounding box: min must be less than max" },
+      { status: 400 }
+    );
+  }
+
   const supabase = createServiceClient();
 
   // Demo mode: return mock listings

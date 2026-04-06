@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { computeSafetyScore } from "@/lib/safety";
 import { createServiceClient } from "@/lib/supabase/server";
+import { HARRIS_COUNTY_BOUNDS } from "@/lib/constants";
 import type { FloodRiskLevel } from "@/types/safety";
 
 export async function GET(req: NextRequest) {
@@ -11,6 +12,16 @@ export async function GET(req: NextRequest) {
   if (!lat || !lng) {
     return NextResponse.json(
       { error: "Missing params: lat, lng" },
+      { status: 400 }
+    );
+  }
+
+  if (
+    lat < HARRIS_COUNTY_BOUNDS.sw.lat || lat > HARRIS_COUNTY_BOUNDS.ne.lat ||
+    lng < HARRIS_COUNTY_BOUNDS.sw.lng || lng > HARRIS_COUNTY_BOUNDS.ne.lng
+  ) {
+    return NextResponse.json(
+      { error: "Coordinates outside Harris County bounds" },
       { status: 400 }
     );
   }

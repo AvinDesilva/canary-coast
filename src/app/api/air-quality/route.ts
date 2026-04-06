@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAirQuality } from "@/lib/purpleair";
 import type { AirQualityReading } from "@/types/air-quality";
-import { PURPLEAIR_CACHE_TTL_MS } from "@/lib/constants";
+import { PURPLEAIR_CACHE_TTL_MS, HARRIS_COUNTY_BOUNDS } from "@/lib/constants";
 
 const cache = new Map<string, { data: AirQualityReading; timestamp: number }>();
 const MAX_CACHE_SIZE = 500;
@@ -13,6 +13,16 @@ export async function GET(req: NextRequest) {
 
   if (!lat || !lng) {
     return NextResponse.json({ error: "Missing params: lat, lng" }, { status: 400 });
+  }
+
+  if (
+    lat < HARRIS_COUNTY_BOUNDS.sw.lat || lat > HARRIS_COUNTY_BOUNDS.ne.lat ||
+    lng < HARRIS_COUNTY_BOUNDS.sw.lng || lng > HARRIS_COUNTY_BOUNDS.ne.lng
+  ) {
+    return NextResponse.json(
+      { error: "Coordinates outside Harris County bounds" },
+      { status: 400 }
+    );
   }
 
   const cacheKey = `${lat.toFixed(3)},${lng.toFixed(3)}`;
