@@ -23,11 +23,11 @@ export const FLOOD_SCORE_MAP: Record<FloodRiskLevel, number> = {
 };
 
 export const SAFETY_BANDS: SafetyBand[] = [
-  { label: "Low Risk", color: "#22c55e", min: 80, max: 100 },
-  { label: "Low-Moderate Risk", color: "#84cc16", min: 60, max: 79 },
-  { label: "Fair", color: "#eab308", min: 40, max: 59 },
-  { label: "Caution", color: "#f97316", min: 20, max: 39 },
-  { label: "High Risk", color: "#ef4444", min: 0, max: 19 },
+  { label: "Low Risk", color: "#93c5fd", min: 80, max: 100 },
+  { label: "Low-Moderate Risk", color: "#60a5fa", min: 60, max: 79 },
+  { label: "Fair", color: "#a78bfa", min: 40, max: 59 },
+  { label: "Caution", color: "#8b5cf6", min: 20, max: 39 },
+  { label: "High Risk", color: "#7c3aed", min: 0, max: 19 },
 ];
 
 export const CANCER_TYPES = [
@@ -75,13 +75,13 @@ export const MAPBOX_SCORE_INTERPOLATION = [
   ["linear"],
   ["get", "safety_score"],
   0,
-  "#ef4444",
+  "#7c3aed",
   25,
-  "#f97316",
+  "#8b5cf6",
   50,
-  "#eab308",
+  "#a78bfa",
   75,
-  "#84cc16",
+  "#60a5fa",
   100,
-  "#22c55e",
+  "#93c5fd",
 ] as const;

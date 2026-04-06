@@ -38,9 +38,9 @@ export default function CancerTrend({ data, zipCode }: CancerTrendProps) {
   if (!zipData.length) return null;
 
   const getBarColor = (sir: number) => {
-    if (sir < 0.8) return "#22c55e";
-    if (sir <= 1.2) return "#eab308";
-    return "#ef4444";
+    if (sir < 0.8) return "#93c5fd";
+    if (sir <= 1.2) return "#a78bfa";
+    return "#7c3aed";
   };
 
   return (
