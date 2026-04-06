@@ -1,0 +1,11 @@
+{
+  "aqi": 22,
+  "bucket": "Good",
+  "description": "AQI 0\u201350 (EPA: Good). PM2.5 below 9 \u00b5g/m\u00b3. Satisfactory air quality for all groups.",
+  "pm25_corrected": 5.1,
+  "pm25_raw": 8.4,
+  "humidity": 65,
+  "sensor_name": "Montrose Community Park",
+  "sensor_distance_mi": 0.8,
+  "fetched_at": "2026-04-06T00:00:00.000Z"
+}

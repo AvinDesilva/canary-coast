@@ -14,6 +14,20 @@
 - **Deployment:** Vercel
 - **External APIs:** Rentcast API, ArcGIS Feature Services
 
+## Exploration Guidance
+
+Skip during codebase exploration (low signal-to-token ratio):
+- `src/types/generated/` — auto-generated Supabase types (~1,660 lines). Only consumers: `src/lib/supabase/client.ts` and `server.ts`.
+- `src/__fixtures__/` — JSON mock/demo data. Only used in demo mode (no Supabase URL configured).
+- `docs/` — historical build plan and design spec. Only read `docs/design/canary-coast-design-skill.md` before UI work.
+- `scripts/` — one-time data ingestion scripts, not part of the runtime application.
+
+Essential files to read first:
+- `CLAUDE.md` (this file)
+- `src/lib/constants.ts` — shared constants, scoring tables, enums
+- `src/lib/safety.ts` — safety score algorithm
+- `src/types/listing.ts`, `safety.ts`, `air-quality.ts`, `geo.ts` — hand-written types (129 lines total)
+
 ## Architecture
 
 Data flow: `Frontend → Supabase PostGIS → API Routes (Vercel Functions) → Rentcast / ArcGIS`
@@ -25,7 +39,7 @@ Data flow: `Frontend → Supabase PostGIS → API Routes (Vercel Functions) → 
 - Address lookup via `/api/property` uses Rentcast `/v1/properties` for any property regardless of listing status
 
 **Supabase tables:** `listings`, `search_cache`, `cancer_prevalence`, `flood_zones`, `census_tracts`, `safety_scores`
-All geometry columns have GiST spatial indexes. See `CANARY_COAST_BUILD_PLAN-2.md` §3 for full schema.
+All geometry columns have GiST spatial indexes. See `docs/CANARY_COAST_BUILD_PLAN-2.md` §3 for full schema.
 
 ## Safety Score Algorithm
 
@@ -37,7 +51,7 @@ All geometry columns have GiST spatial indexes. See `CANARY_COAST_BUILD_PLAN-2.m
 
 ## Design System
 
-**Editorial Minimalism + High-Contrast Fintech** aesthetic. Always review `canary-coast-design-skill.md` before building UI.
+**Editorial Minimalism + High-Contrast Fintech** aesthetic. Always review `docs/design/canary-coast-design-skill.md` before building UI.
 
 **Color variables (never hardcode hex):**
 ```css
@@ -94,26 +108,25 @@ supabase db diff                                                      # Diff loc
 supabase db push                                                      # Push local migrations to remote
 supabase db pull                                                      # Pull remote schema changes
 
-supabase gen types typescript --linked > src/types/database.ts       # Regenerate TypeScript types from live DB
+supabase gen types typescript --linked > src/types/generated/database.ts  # Regenerate TypeScript types from live DB
 ```
 
-**TypeScript types:** `src/types/database.ts` is auto-generated — do not edit manually. Regenerate after any schema change.
+**TypeScript types:** `src/types/generated/database.ts` is auto-generated — do not edit manually. Regenerate after any schema change.
 Both Supabase clients (`src/lib/supabase/client.ts`, `src/lib/supabase/server.ts`) are typed with `Database`.
 
 **Migration naming:** Files in `supabase/migrations/` must have unique numeric prefixes (e.g. `001_`, `002_`). Duplicate prefixes cause `db diff` to fail.
 
-## Development Phases
+## Data Pipeline
 
-1. Scaffold & Map — Next.js + Mapbox
-2. Data Ingestion — cancer, flood, census → Supabase
-3. Listings Integration — Rentcast API + caching
-4. Safety Score Engine — calculation + storage
-5. UI/UX Polish — design system, accessibility
-6. Deploy & Optimize — Vercel, performance, monitoring
+Environmental data is ingested once via `scripts/ingest-*.ts` and stored in Supabase:
+1. **Census Tracts** — geometry from Census TIGER/Line into `census_tracts`
+2. **Cancer Prevalence** — SIR data from Harris County Public Health, joined to tracts via FIPS, stored in `cancer_prevalence`
+3. **Flood Zones** — FEMA NFHL polygons from ArcGIS Feature Services into `flood_zones`
+4. **Safety Scores** — pre-computed per census tract into `safety_scores`; point lookups use PostGIS `ST_Within`
 
-**Branches:** `main` (production, PR required) → `develop` (integration) → `feature/*`
+All geometry columns have GiST spatial indexes. Ingestion scripts are idempotent.
 
 ## References
 
-- **Build Plan:** `CANARY_COAST_BUILD_PLAN-2.md` — full schema, phases, data sources, deployment
-- **Design System:** `canary-coast-design-skill.md` — colors, typography, component patterns
+- **Schema Reference:** `docs/CANARY_COAST_BUILD_PLAN-2.md` — Supabase schema (§3), risks, future enhancements. Archived full original at `docs/archive/`.
+- **Design System:** `docs/design/canary-coast-design-skill.md` — colors, typography, component patterns

@@ -2,22 +2,10 @@ import { NextResponse } from "next/server";
 import { getSensorHistoryAvgAqi } from "@/lib/purpleair";
 import { DEMO_MODE } from "@/lib/constants";
 import { createServiceClient } from "@/lib/supabase/server";
+import demoAveragesData from "@/__fixtures__/demo-sensor-averages.json";
 
 const CACHE_TTL_HOURS = 24;
-
-// Mock historical averages keyed by fake sensor_index used in MOCK_AIR_QUALITY_GEOJSON
-const DEMO_AVERAGES: Record<number, { aqi_monthly: number; aqi_yearly: number }> = {
-  10001: { aqi_monthly: 27, aqi_yearly: 31 },
-  10002: { aqi_monthly: 20, aqi_yearly: 23 },
-  10003: { aqi_monthly: 30, aqi_yearly: 34 },
-  10004: { aqi_monthly: 24, aqi_yearly: 28 },
-  10005: { aqi_monthly: 68, aqi_yearly: 72 },
-  10006: { aqi_monthly: 80, aqi_yearly: 85 },
-  10007: { aqi_monthly: 105, aqi_yearly: 112 },
-  10008: { aqi_monthly: 32, aqi_yearly: 36 },
-  10009: { aqi_monthly: 43, aqi_yearly: 48 },
-  10010: { aqi_monthly: 16, aqi_yearly: 19 },
-};
+const DEMO_AVERAGES = demoAveragesData as Record<string, { aqi_monthly: number; aqi_yearly: number }>;
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -27,7 +15,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   }
 
   if (DEMO_MODE) {
-    const demo = DEMO_AVERAGES[sensorIndex] ?? null;
+    const demo = DEMO_AVERAGES[String(sensorIndex)] ?? null;
     return NextResponse.json({
       aqi_monthly: demo?.aqi_monthly ?? null,
       aqi_yearly: demo?.aqi_yearly ?? null,

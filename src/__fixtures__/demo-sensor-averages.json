@@ -1,0 +1,12 @@
+{
+  "10001": { "aqi_monthly": 27, "aqi_yearly": 31 },
+  "10002": { "aqi_monthly": 20, "aqi_yearly": 23 },
+  "10003": { "aqi_monthly": 30, "aqi_yearly": 34 },
+  "10004": { "aqi_monthly": 24, "aqi_yearly": 28 },
+  "10005": { "aqi_monthly": 68, "aqi_yearly": 72 },
+  "10006": { "aqi_monthly": 80, "aqi_yearly": 85 },
+  "10007": { "aqi_monthly": 105, "aqi_yearly": 112 },
+  "10008": { "aqi_monthly": 32, "aqi_yearly": 36 },
+  "10009": { "aqi_monthly": 43, "aqi_yearly": 48 },
+  "10010": { "aqi_monthly": 16, "aqi_yearly": 19 }
+}

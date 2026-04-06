@@ -1,5 +1,6 @@
 import type { AirQualityReading, PurpleAirSensorsResponse } from "@/types/air-quality";
 import { AQI_BREAKPOINTS, AQI_BUCKETS } from "./constants";
+import { fetchWithRetry } from "./fetch-utils";
 
 const API_KEY = process.env.PURPLEAIR_API_KEY;
 const BASE_URL = "https://api.purpleair.com/v1";
@@ -7,18 +8,6 @@ const BASE_URL = "https://api.purpleair.com/v1";
 function getHeaders() {
   if (!API_KEY) throw new Error("PURPLEAIR_API_KEY is not configured");
   return { "X-API-Key": API_KEY };
-}
-
-async function fetchWithRetry(url: string, options: RequestInit, retries = 2): Promise<Response> {
-  for (let attempt = 0; attempt <= retries; attempt++) {
-    try {
-      return await fetch(url, options);
-    } catch (err) {
-      if (attempt === retries) throw err;
-      await new Promise((r) => setTimeout(r, 300 * (attempt + 1)));
-    }
-  }
-  throw new Error("fetchWithRetry: unreachable");
 }
 
 function buildBbox(lat: number, lng: number, radiusMiles: number) {

@@ -5,40 +5,9 @@ import { computeSafetyScore } from "@/lib/safety";
 import { createServiceClient } from "@/lib/supabase/server";
 import type { CachedListing } from "@/types/listing";
 import type { FloodRiskLevel } from "@/types/safety";
+import mockPropertyData from "@/__fixtures__/mock-property.json";
 
-// Mock property for demo mode
-const MOCK_PROPERTY_RESULT: CachedListing = {
-  id: "mock-property",
-  external_id: "mock-property-lookup",
-  address: "4102 Montrose Blvd",
-  city: "Houston",
-  state: "TX",
-  zipcode: "77006",
-  county: "Harris",
-  latitude: 29.7355,
-  longitude: -95.3908,
-  price: 492000,
-  bedrooms: 3,
-  bathrooms: 2.5,
-  sqft: 2100,
-  lot_sqft: 4500,
-  year_built: 2018,
-  home_type: "SINGLE_FAMILY",
-  listing_status: "UNLISTED",
-  listing_type: null,
-  days_on_market: null,
-  listed_date: null,
-  mls_name: null,
-  listing_agent_name: null,
-  listing_office_name: null,
-  cancer_tract_geoid: "48201311100",
-  cancer_sir: 0.72,
-  flood_zone_code: "X",
-  flood_risk_level: "minimal",
-  safety_score: 89,
-  fetched_at: new Date().toISOString(),
-  expires_at: new Date(Date.now() + 86400000).toISOString(),
-};
+const MOCK_PROPERTY_RESULT = mockPropertyData as unknown as CachedListing;
 
 export async function GET(req: NextRequest) {
   const address = req.nextUrl.searchParams.get("address");

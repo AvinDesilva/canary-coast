@@ -1,5 +1,6 @@
 import type { BoundingBox } from "@/types/geo";
 import type { HomeType, ListingFilters } from "@/types/listing";
+import { fetchWithRetry } from "./fetch-utils";
 
 const API_KEY = process.env.RENTCAST_API_KEY;
 const BASE_URL = "https://api.rentcast.io/v1";
@@ -116,19 +117,6 @@ const HOME_TYPE_FROM_RENTCAST: Record<string, HomeType> = {
 export function normalizePropertyType(rentcastType?: string): HomeType | null {
   if (!rentcastType) return null;
   return HOME_TYPE_FROM_RENTCAST[rentcastType] ?? null;
-}
-
-async function fetchWithRetry(url: string, options: RequestInit, retries = 2): Promise<Response> {
-  for (let attempt = 0; attempt <= retries; attempt++) {
-    try {
-      return await fetch(url, options);
-    } catch (err) {
-      if (attempt === retries) throw err;
-      // Brief pause before retry — gives stale connections time to close
-      await new Promise((r) => setTimeout(r, 300 * (attempt + 1)));
-    }
-  }
-  throw new Error("fetchWithRetry: unreachable");
 }
 
 export async function searchListings(

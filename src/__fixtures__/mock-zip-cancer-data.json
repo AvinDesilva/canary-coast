@@ -1,0 +1,18 @@
+[
+  { "zip_code": "77006", "cancer_type": "all", "year_start": 2013, "year_end": 2021, "sir": 0.72, "observed_cases": 145, "expected_cases": 201, "confidence_low": 0.61, "confidence_high": 0.85 },
+  { "zip_code": "77006", "cancer_type": "lung", "year_start": 2013, "year_end": 2021, "sir": 0.68, "observed_cases": 22, "expected_cases": 32, "confidence_low": 0.43, "confidence_high": 1.03 },
+  { "zip_code": "77006", "cancer_type": "breast", "year_start": 2013, "year_end": 2021, "sir": 0.81, "observed_cases": 38, "expected_cases": 47, "confidence_low": 0.57, "confidence_high": 1.11 },
+  { "zip_code": "77006", "cancer_type": "prostate", "year_start": 2013, "year_end": 2021, "sir": 0.65, "observed_cases": 28, "expected_cases": 43, "confidence_low": 0.43, "confidence_high": 0.94 },
+  { "zip_code": "77006", "cancer_type": "colon", "year_start": 2013, "year_end": 2021, "sir": 0.79, "observed_cases": 15, "expected_cases": 19, "confidence_low": 0.44, "confidence_high": 1.30 },
+  { "zip_code": "77006", "cancer_type": "brain", "year_start": 2013, "year_end": 2021, "sir": 0.88, "observed_cases": 8, "expected_cases": 9, "confidence_low": 0.38, "confidence_high": 1.73 },
+  { "zip_code": "77096", "cancer_type": "all", "year_start": 2013, "year_end": 2021, "sir": 1.35, "observed_cases": 312, "expected_cases": 231, "confidence_low": 1.20, "confidence_high": 1.51 },
+  { "zip_code": "77096", "cancer_type": "lung", "year_start": 2013, "year_end": 2021, "sir": 1.52, "observed_cases": 58, "expected_cases": 38, "confidence_low": 1.15, "confidence_high": 1.96 },
+  { "zip_code": "77096", "cancer_type": "breast", "year_start": 2013, "year_end": 2021, "sir": 1.18, "observed_cases": 65, "expected_cases": 55, "confidence_low": 0.91, "confidence_high": 1.50 },
+  { "zip_code": "77096", "cancer_type": "prostate", "year_start": 2013, "year_end": 2021, "sir": 1.42, "observed_cases": 72, "expected_cases": 51, "confidence_low": 1.11, "confidence_high": 1.79 },
+  { "zip_code": "77096", "cancer_type": "colon", "year_start": 2013, "year_end": 2021, "sir": 1.31, "observed_cases": 29, "expected_cases": 22, "confidence_low": 0.88, "confidence_high": 1.88 },
+  { "zip_code": "77096", "cancer_type": "brain", "year_start": 2013, "year_end": 2021, "sir": 1.15, "observed_cases": 12, "expected_cases": 10, "confidence_low": 0.59, "confidence_high": 2.01 },
+  { "zip_code": "77060", "cancer_type": "all", "year_start": 2013, "year_end": 2021, "sir": 1.65, "observed_cases": 420, "expected_cases": 255, "confidence_low": 1.50, "confidence_high": 1.82 },
+  { "zip_code": "77060", "cancer_type": "lung", "year_start": 2013, "year_end": 2021, "sir": 1.88, "observed_cases": 85, "expected_cases": 45, "confidence_low": 1.50, "confidence_high": 2.33 },
+  { "zip_code": "77060", "cancer_type": "breast", "year_start": 2013, "year_end": 2021, "sir": 1.45, "observed_cases": 78, "expected_cases": 54, "confidence_low": 1.15, "confidence_high": 1.81 },
+  { "zip_code": "77060", "cancer_type": "prostate", "year_start": 2013, "year_end": 2021, "sir": 1.72, "observed_cases": 92, "expected_cases": 53, "confidence_low": 1.39, "confidence_high": 2.11 }
+]
