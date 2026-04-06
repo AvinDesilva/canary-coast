@@ -102,68 +102,95 @@ export async function GET(req: NextRequest) {
     const results = await searchListings(expandedBbox);
     await recordRequest(supabase);
 
-    // Record the expanded area in search_cache so subsequent pans within it skip Rentcast
-    await supabase.from("search_cache").insert({
-      bbox: `SRID=4326;POLYGON((${expandedBbox.west} ${expandedBbox.south}, ${expandedBbox.east} ${expandedBbox.south}, ${expandedBbox.east} ${expandedBbox.north}, ${expandedBbox.west} ${expandedBbox.north}, ${expandedBbox.west} ${expandedBbox.south}))`,
-      listing_count: results.length,
+    if (results.length === 0) {
+      // Mark area as searched with no results so future requests skip Rentcast
+      await supabase.from("search_cache").insert({
+        bbox: `SRID=4326;POLYGON((${expandedBbox.west} ${expandedBbox.south}, ${expandedBbox.east} ${expandedBbox.south}, ${expandedBbox.east} ${expandedBbox.north}, ${expandedBbox.west} ${expandedBbox.north}, ${expandedBbox.west} ${expandedBbox.south}))`,
+        listing_count: 0,
+      });
+      return NextResponse.json([], {
+        headers: { "X-Rentcast-Remaining": (await getRemainingRequests(supabase)).toString() },
+      });
+    }
+
+    // --- Batch safety lookup: 1 RPC instead of N individual calls ---
+    // Cast to any: get_safety_at_points is a new function not yet in the generated DB types.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: safetyData } = await (supabase as any).rpc("get_safety_at_points", {
+      lats: results.map((r) => r.latitude),
+      lngs: results.map((r) => r.longitude),
+    }) as { data: Array<{
+      idx: number;
+      cancer_tract_geoid: string | null;
+      cancer_sir: number | null;
+      cancer_prevalence: number | null;
+      flood_zone: string | null;
+      flood_risk: string | null;
+    }> | null };
+
+    // WITH ORDINALITY produces 1-based idx; build a map for O(1) access
+    const safetyByIdx = new Map<number, NonNullable<typeof safetyData>[number]>();
+    if (safetyData) {
+      for (const row of safetyData) {
+        safetyByIdx.set(row.idx, row);
+      }
+    }
+
+    // Build listing objects synchronously — no I/O in this loop
+    const listings = results.map((r, i) => {
+      const safety = safetyByIdx.get(i + 1); // 1-based ordinality
+      const scores = computeSafetyScore(
+        safety?.cancer_sir ?? null,
+        (safety?.flood_risk as FloodRiskLevel) ?? null
+      );
+
+      return {
+        external_id: r.id,
+        address: r.addressLine1 || r.formattedAddress,
+        city: r.city,
+        state: r.state,
+        zipcode: r.zipCode,
+        county: r.county ?? null,
+        latitude: r.latitude,
+        longitude: r.longitude,
+        point: `SRID=4326;POINT(${r.longitude} ${r.latitude})`,
+        price: r.price ?? null,
+        bedrooms: r.bedrooms ?? null,
+        bathrooms: r.bathrooms ?? null,
+        sqft: r.squareFootage ?? null,
+        lot_sqft: r.lotSize ?? null,
+        year_built: r.yearBuilt ?? null,
+        home_type: normalizePropertyType(r.propertyType),
+        listing_status: "FOR_SALE",
+        listing_type: r.listingType ?? null,
+        days_on_market: r.daysOnMarket ?? null,
+        listed_date: r.listedDate ?? null,
+        mls_name: r.mlsName ?? null,
+        listing_agent_name: r.listingAgent?.name ?? null,
+        listing_office_name: r.listingOffice?.name ?? null,
+        cancer_tract_geoid: safety?.cancer_tract_geoid ?? null,
+        cancer_sir: safety?.cancer_sir ?? null,
+        flood_zone_code: safety?.flood_zone ?? null,
+        flood_risk_level: safety?.flood_risk ?? null,
+        safety_score: scores.total,
+      };
     });
 
-    // Compute safety scores and cache listings
-    const listings = await Promise.all(
-      results.map(async (r) => {
-        const { data: safety } = await supabase.rpc("get_safety_at_point", {
-          lat: r.latitude,
-          lng: r.longitude,
-        });
+    // --- Batch upsert: 1 request instead of N ---
+    const { error: upsertError } = await supabase
+      .from("listings")
+      .upsert(listings, { onConflict: "external_id" });
 
-        const safetyRow = safety?.[0];
-        const scores = computeSafetyScore(
-          safetyRow?.cancer_sir ?? null,
-          (safetyRow?.flood_risk as FloodRiskLevel) ?? null
-        );
+    if (upsertError) {
+      console.error("Batch listing upsert failed:", upsertError.message, upsertError.details);
+    }
 
-        const listing = {
-          external_id: r.id,
-          address: r.addressLine1 || r.formattedAddress,
-          city: r.city,
-          state: r.state,
-          zipcode: r.zipCode,
-          county: r.county ?? null,
-          latitude: r.latitude,
-          longitude: r.longitude,
-          point: `SRID=4326;POINT(${r.longitude} ${r.latitude})`,
-          price: r.price ?? null,
-          bedrooms: r.bedrooms ?? null,
-          bathrooms: r.bathrooms ?? null,
-          sqft: r.squareFootage ?? null,
-          lot_sqft: r.lotSize ?? null,
-          year_built: r.yearBuilt ?? null,
-          home_type: normalizePropertyType(r.propertyType),
-          listing_status: "FOR_SALE",
-          listing_type: r.listingType ?? null,
-          days_on_market: r.daysOnMarket ?? null,
-          listed_date: r.listedDate ?? null,
-          mls_name: r.mlsName ?? null,
-          listing_agent_name: r.listingAgent?.name ?? null,
-          listing_office_name: r.listingOffice?.name ?? null,
-          cancer_tract_geoid: safetyRow?.cancer_tract_geoid ?? null,
-          cancer_sir: safetyRow?.cancer_sir ?? null,
-          flood_zone_code: safetyRow?.flood_zone ?? null,
-          flood_risk_level: safetyRow?.flood_risk ?? null,
-          safety_score: scores.total,
-        };
-
-        const { error: upsertError } = await supabase
-          .from("listings")
-          .upsert(listing, { onConflict: "external_id" });
-
-        if (upsertError) {
-          console.error("Listing upsert failed:", upsertError.message, upsertError.details);
-        }
-
-        return listing;
-      })
-    );
+    // Mark area as cached only after listings are persisted, so a timeout doesn't
+    // poison the cache with an empty area
+    await supabase.from("search_cache").insert({
+      bbox: `SRID=4326;POLYGON((${expandedBbox.west} ${expandedBbox.south}, ${expandedBbox.east} ${expandedBbox.south}, ${expandedBbox.east} ${expandedBbox.north}, ${expandedBbox.west} ${expandedBbox.north}, ${expandedBbox.west} ${expandedBbox.south}))`,
+      listing_count: listings.length,
+    });
 
     return NextResponse.json(listings, {
       headers: { "X-Rentcast-Remaining": (await getRemainingRequests(supabase)).toString() },

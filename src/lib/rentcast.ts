@@ -130,7 +130,7 @@ export async function searchListings(
     longitude: longitude.toString(),
     radius: radius.toString(),
     status: "Active",
-    limit: "500",
+    limit: "200",
   });
 
   if (filters?.homeType?.length) {

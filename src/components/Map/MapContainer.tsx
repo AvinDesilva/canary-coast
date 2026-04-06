@@ -18,6 +18,7 @@ import AirQualityOverlay from "./AirQualityOverlay";
 
 interface MapContainerProps {
   listings: CachedListing[];
+  loading?: boolean;
   overlays: { flood: boolean; cancer: boolean; listings: boolean; facilities: boolean; airQuality: boolean };
   floodGeoJSON?: GeoJSON.FeatureCollection;
   cancerGeoJSON?: GeoJSON.FeatureCollection;
@@ -31,6 +32,7 @@ interface MapContainerProps {
 
 export default function MapContainer({
   listings,
+  loading,
   overlays,
   floodGeoJSON,
   cancerGeoJSON,
@@ -144,6 +146,12 @@ export default function MapContainer({
   return (
     <div className="h-full w-full relative border-2 border-twilight-indigo">
       <div ref={mapContainer} className="absolute inset-0" />
+      {loading && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 bg-twilight-indigo/90 border border-sapphire-sky rounded-full px-4 py-1.5 flex items-center gap-2 pointer-events-none">
+          <div className="w-3 h-3 border-2 border-fresh-sky border-t-transparent rounded-full animate-spin" />
+          <span className="text-alice-blue/80 text-xs font-fraunces tracking-wide">Loading listings…</span>
+        </div>
+      )}
       {mapInstance && (
         <>
           {overlays.listings && (

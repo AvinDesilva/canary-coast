@@ -70,6 +70,7 @@ export default function Home() {
           <div className="flex-1 relative">
             <MapContainer
               listings={listings}
+              loading={loading}
               overlays={overlays}
               floodGeoJSON={floodGeoJSON ?? undefined}
               cancerGeoJSON={cancerGeoJSON ?? undefined}
