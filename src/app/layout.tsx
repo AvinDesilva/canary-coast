@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Canary Coast",
     description:
-      "Harris County housing listings scored for cancer risk and flood zone danger.",
+      "Harris County housing listings overlaid with FEMA flood zone classifications and Harris County cancer incidence data.",
     type: "website",
   },
 };
@@ -20,7 +21,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <footer className="fixed bottom-0 left-0 z-20 p-2" style={{ fontSize: "9px" }}>
+          <Link
+            href="/privacy"
+            className="text-alice-blue/30 hover:text-alice-blue/60 underline transition-colors"
+          >
+            Privacy Notice
+          </Link>
+        </footer>
+      </body>
     </html>
   );
 }

@@ -23,8 +23,8 @@ export const FLOOD_SCORE_MAP: Record<FloodRiskLevel, number> = {
 };
 
 export const SAFETY_BANDS: SafetyBand[] = [
-  { label: "Excellent", color: "#22c55e", min: 80, max: 100 },
-  { label: "Good", color: "#84cc16", min: 60, max: 79 },
+  { label: "Low Risk", color: "#22c55e", min: 80, max: 100 },
+  { label: "Low-Moderate Risk", color: "#84cc16", min: 60, max: 79 },
   { label: "Fair", color: "#eab308", min: 40, max: 59 },
   { label: "Caution", color: "#f97316", min: 20, max: 39 },
   { label: "High Risk", color: "#ef4444", min: 0, max: 19 },

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ListingFilters } from "@/types/listing";
+import Tooltip from "@/components/UI/Tooltip";
 
 interface ListingFiltersProps {
   filters: ListingFilters;
@@ -56,8 +57,13 @@ export default function ListingFiltersPanel({
       </div>
 
       <div>
-        <label className="text-xs font-semibold uppercase tracking-wider text-alice-blue/60 block mb-1">
+        <label className="text-xs font-semibold uppercase tracking-wider text-alice-blue/60 flex items-center gap-1 mb-1">
           Min Safety Score: {filters.safetyScoreMin ?? 0}
+          <Tooltip content="Data-derived risk score: FEMA flood zone classification (60%) + Harris County cancer incidence rate (40%). Not a neighborhood quality rating.">
+            <span className="text-alice-blue/40 cursor-default select-none border border-alice-blue/20 rounded-full w-4 h-4 inline-flex items-center justify-center leading-none" style={{ fontSize: "10px" }}>
+              i
+            </span>
+          </Tooltip>
         </label>
         <input
           type="range"

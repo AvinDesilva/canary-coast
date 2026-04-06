@@ -6,8 +6,8 @@ export type FloodRiskLevel =
   | "very_high";
 
 export type SafetyBandLabel =
-  | "Excellent"
-  | "Good"
+  | "Low Risk"
+  | "Low-Moderate Risk"
   | "Fair"
   | "Caution"
   | "High Risk";
