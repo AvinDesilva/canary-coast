@@ -30,7 +30,8 @@ RETURNS json AS $$
   FROM flood_zones;
 $$ LANGUAGE sql STABLE;
 
--- Replace get_cancer_geojson with simplified geometry
+-- Replace get_cancer_geojson with simplified geometry (preserves all per-type
+-- SIR columns added in migration 008 — required by CancerOverlay paint expression)
 CREATE OR REPLACE FUNCTION get_cancer_geojson()
 RETURNS json AS $$
   SELECT json_build_object(
@@ -39,9 +40,13 @@ RETURNS json AS $$
       json_build_object(
         'type', 'Feature',
         'properties', json_build_object(
-          'geoid', geoid,
-          'cancer_sir', cancer_sir_overall,
-          'cancer_prevalence', cancer_prevalence_pct
+          'geoid',               geoid,
+          'cancer_sir_overall',  cancer_sir_overall,
+          'cancer_sir_brain',    cancer_sir_brain,
+          'cancer_sir_lung',     cancer_sir_lung,
+          'cancer_sir_breast',   cancer_sir_breast,
+          'cancer_sir_prostate', cancer_sir_prostate,
+          'cancer_sir_colon',    cancer_sir_colon
         ),
         'geometry', ST_AsGeoJSON(
           ST_SimplifyPreserveTopology(geometry, 0.001)
