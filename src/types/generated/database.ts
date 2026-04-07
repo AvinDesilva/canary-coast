@@ -98,6 +98,13 @@ export type Database = {
           cancer_sir_prostate: number | null
           data_source: string | null
           data_year: number | null
+          flood_allison: number | null
+          flood_event_count: number | null
+          flood_harvey: number | null
+          flood_imelda: number | null
+          flood_memorial_day: number | null
+          flood_tax_day: number | null
+          flood_total_structures: number | null
           geoid: string
           geometry: unknown
           id: string
@@ -114,6 +121,13 @@ export type Database = {
           cancer_sir_prostate?: number | null
           data_source?: string | null
           data_year?: number | null
+          flood_allison?: number | null
+          flood_event_count?: number | null
+          flood_harvey?: number | null
+          flood_imelda?: number | null
+          flood_memorial_day?: number | null
+          flood_tax_day?: number | null
+          flood_total_structures?: number | null
           geoid: string
           geometry: unknown
           id?: string
@@ -130,6 +144,13 @@ export type Database = {
           cancer_sir_prostate?: number | null
           data_source?: string | null
           data_year?: number | null
+          flood_allison?: number | null
+          flood_event_count?: number | null
+          flood_harvey?: number | null
+          flood_imelda?: number | null
+          flood_memorial_day?: number | null
+          flood_tax_day?: number | null
+          flood_total_structures?: number | null
           geoid?: string
           geometry?: unknown
           id?: string
@@ -453,33 +474,6 @@ export type Database = {
         }
         Relationships: []
       }
-      zip_geometries: {
-        Row: {
-          centroid_lat: number | null
-          centroid_lng: number | null
-          geometry: unknown
-          id: string
-          ingested_at: string | null
-          zip_code: string
-        }
-        Insert: {
-          centroid_lat?: number | null
-          centroid_lng?: number | null
-          geometry: unknown
-          id?: string
-          ingested_at?: string | null
-          zip_code: string
-        }
-        Update: {
-          centroid_lat?: number | null
-          centroid_lng?: number | null
-          geometry?: unknown
-          id?: string
-          ingested_at?: string | null
-          zip_code?: string
-        }
-        Relationships: []
-      }
     }
     Views: {
       geography_columns: {
@@ -793,18 +787,21 @@ export type Database = {
         }[]
       }
       get_cancer_geojson: { Args: never; Returns: Json }
-      get_cancer_trend: {
-        Args: { target_cancer_type?: string; target_geoid: string }
-        Returns: {
-          confidence_high: number
-          confidence_low: number
-          sir: number
-          year_end: number
-          year_start: number
-        }[]
-      }
       get_facilities_geojson: { Args: never; Returns: Json }
       get_flood_geojson: { Args: never; Returns: Json }
+      get_historical_flood_at_point: {
+        Args: { lat: number; lng: number }
+        Returns: {
+          flood_allison: number
+          flood_event_count: number
+          flood_harvey: number
+          flood_imelda: number
+          flood_memorial_day: number
+          flood_tax_day: number
+          flood_total_structures: number
+        }[]
+      }
+      get_historical_flood_geojson: { Args: never; Returns: Json }
       get_listings_in_bbox: {
         Args: {
           lat_max: number
@@ -861,8 +858,21 @@ export type Database = {
           cancer_prevalence: number
           cancer_sir: number
           cancer_tract_geoid: string
+          flood_event_count: number
           flood_risk: string
           flood_zone: string
+        }[]
+      }
+      get_safety_at_points: {
+        Args: { lats: number[]; lngs: number[] }
+        Returns: {
+          cancer_prevalence: number
+          cancer_sir: number
+          cancer_tract_geoid: string
+          flood_event_count: number
+          flood_risk: string
+          flood_zone: string
+          idx: number
         }[]
       }
       gettransactionid: { Args: never; Returns: unknown }

@@ -24,5 +24,7 @@ export async function GET() {
     return NextResponse.json(MOCK_CANCER_GEOJSON);
   }
 
-  return NextResponse.json(data);
+  return NextResponse.json(data, {
+    headers: { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800" },
+  });
 }
