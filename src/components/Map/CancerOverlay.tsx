@@ -14,9 +14,9 @@ function buildColorExpression(cancerType: CancerTypeValue) {
     "interpolate",
     ["linear"],
     ["coalesce", ["get", `cancer_sir_${cancerType}`], ["get", "cancer_sir_overall"], 1.0],
-    0.5, "#93c5fd",
-    1.0, "#a78bfa",
-    1.5, "#7c3aed",
+    0.5, "#e0e7ff",
+    1.0, "#818cf8",
+    1.5, "#4c1d95",
   ];
 }
 

@@ -28,7 +28,7 @@ export default function ListingDetail({
   const isUnlisted = listing.listing_status === "UNLISTED";
   const priceLabel = isUnlisted ? "Last Sale Price" : null;
   const price = listing.price
-    ? `$${listing.price.toLocaleString()}`
+    ? `$${listing.price.toLocaleString("en-US")}`
     : "Price Unknown";
 
   const cancerData = DEMO_MODE ? MOCK_ZIP_CANCER_DATA : [];
@@ -74,7 +74,7 @@ export default function ListingDetail({
         <div className="flex gap-4 border-2 border-sapphire-sky p-4">
           <Stat label="Beds" value={listing.bedrooms} />
           <Stat label="Baths" value={listing.bathrooms} />
-          <Stat label="Sqft" value={listing.sqft?.toLocaleString()} />
+          <Stat label="Sqft" value={listing.sqft?.toLocaleString("en-US")} />
           <Stat label="Year" value={listing.year_built} />
           {!isUnlisted && listing.days_on_market != null && (
             <Stat label="DOM" value={listing.days_on_market} />

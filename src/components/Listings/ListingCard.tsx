@@ -15,7 +15,7 @@ export default function ListingCard({
   onClick,
 }: ListingCardProps) {
   const price = listing.price
-    ? `$${listing.price.toLocaleString()}`
+    ? `$${listing.price.toLocaleString("en-US")}`
     : "Price TBD";
 
   return (
@@ -36,7 +36,7 @@ export default function ListingCard({
             {[
               listing.bedrooms && `${listing.bedrooms}bd`,
               listing.bathrooms && `${listing.bathrooms}ba`,
-              listing.sqft && `${listing.sqft.toLocaleString()}sqft`,
+              listing.sqft && `${listing.sqft.toLocaleString("en-US")}sqft`,
             ]
               .filter(Boolean)
               .join(" \u00b7 ")}
