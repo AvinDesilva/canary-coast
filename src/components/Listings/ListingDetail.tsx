@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import type { CachedListing } from "@/types/listing";
 import { computeSafetyScore, getScoreBand } from "@/lib/safety";
 import SafetyBadge from "@/components/Safety/SafetyBadge";
@@ -7,7 +8,7 @@ import SafetyBreakdown from "@/components/Safety/SafetyBreakdown";
 import CancerTrend from "@/components/Safety/CancerTrend";
 import { MOCK_ZIP_CANCER_DATA } from "@/lib/mock-data";
 import { DEMO_MODE } from "@/lib/constants";
-import type { FloodRiskLevel } from "@/types/safety";
+import type { FloodRiskLevel, ZipCancerRecord } from "@/types/safety";
 import AirQualityCard from "@/components/Safety/AirQualityCard";
 
 interface ListingDetailProps {
@@ -31,7 +32,19 @@ export default function ListingDetail({
     ? `$${listing.price.toLocaleString("en-US")}`
     : "Price Unknown";
 
-  const cancerData = DEMO_MODE ? MOCK_ZIP_CANCER_DATA : [];
+  const [cancerData, setCancerData] = useState<ZipCancerRecord[]>(
+    DEMO_MODE ? MOCK_ZIP_CANCER_DATA : []
+  );
+
+  useEffect(() => {
+    if (DEMO_MODE || !listing.zipcode) return;
+    fetch(`/api/cancer/${listing.zipcode}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (Array.isArray(json.data)) setCancerData(json.data);
+      })
+      .catch(() => {});
+  }, [listing.zipcode]);
 
   return (
     <div className="fixed inset-y-0 right-0 w-[420px] bg-twilight-indigo border-l-2 border-sapphire-sky z-50 flex flex-col overflow-y-auto animate-slide-up">
@@ -42,9 +55,9 @@ export default function ListingDetail({
         </h2>
         <button
           onClick={onClose}
-          className="text-alice-blue/60 hover:text-fresh-sky text-xl font-bold transition-colors"
+          className="text-xs font-semibold uppercase tracking-wider text-alice-blue/60 hover:text-fresh-sky transition-colors"
         >
-          \u00d7
+          ← Back
         </button>
       </div>
 
