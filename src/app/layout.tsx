@@ -25,10 +25,10 @@ export default function RootLayout({
         {children}
         <footer className="fixed bottom-0 left-0 z-20 p-2" style={{ fontSize: "9px" }}>
           <Link
-            href="/privacy"
+            href="/info"
             className="text-alice-blue/30 hover:text-alice-blue/60 underline transition-colors"
           >
-            Privacy Notice
+            More Info
           </Link>
         </footer>
       </body>
