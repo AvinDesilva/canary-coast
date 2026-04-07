@@ -8,7 +8,7 @@ import SafetyBreakdown from "@/components/Safety/SafetyBreakdown";
 import CancerTrend from "@/components/Safety/CancerTrend";
 import { MOCK_ZIP_CANCER_DATA } from "@/lib/mock-data";
 import { DEMO_MODE } from "@/lib/constants";
-import type { FloodRiskLevel, ZipCancerRecord } from "@/types/safety";
+import type { FloodRiskLevel, ZipCancerRecord, HistoricalFloodInfo } from "@/types/safety";
 import AirQualityCard from "@/components/Safety/AirQualityCard";
 
 interface ListingDetailProps {
@@ -20,9 +20,15 @@ export default function ListingDetail({
   listing,
   onClose,
 }: ListingDetailProps) {
+  const [cancerData, setCancerData] = useState<ZipCancerRecord[]>(
+    DEMO_MODE ? MOCK_ZIP_CANCER_DATA : []
+  );
+  const [floodHistory, setFloodHistory] = useState<HistoricalFloodInfo | null>(null);
+
   const scores = computeSafetyScore(
     listing.cancer_sir,
-    listing.flood_risk_level as FloodRiskLevel | null
+    listing.flood_risk_level as FloodRiskLevel | null,
+    floodHistory?.event_count ?? null
   );
   const band = listing.safety_score !== null ? getScoreBand(listing.safety_score) : null;
 
@@ -31,10 +37,6 @@ export default function ListingDetail({
   const price = listing.price
     ? `$${listing.price.toLocaleString("en-US")}`
     : "Price Unknown";
-
-  const [cancerData, setCancerData] = useState<ZipCancerRecord[]>(
-    DEMO_MODE ? MOCK_ZIP_CANCER_DATA : []
-  );
 
   useEffect(() => {
     if (DEMO_MODE || !listing.zipcode) return;
@@ -45,6 +47,14 @@ export default function ListingDetail({
       })
       .catch(() => {});
   }, [listing.zipcode]);
+
+  useEffect(() => {
+    if (DEMO_MODE) return;
+    fetch(`/api/historical-floods?lat=${listing.latitude}&lng=${listing.longitude}`)
+      .then((r) => r.json())
+      .then((json: HistoricalFloodInfo) => setFloodHistory(json))
+      .catch(() => {});
+  }, [listing.latitude, listing.longitude]);
 
   return (
     <div className="fixed inset-y-0 right-0 w-[420px] bg-twilight-indigo border-l-2 border-sapphire-sky z-50 flex flex-col overflow-y-auto animate-slide-up">
@@ -102,7 +112,7 @@ export default function ListingDetail({
               <div className="font-fraunces text-2xl font-bold" style={{ color: band?.color }}>
                 {band?.label ?? "Unknown"}
               </div>
-              <div className="text-xs text-alice-blue/50" title="Methodology: FEMA flood zone classification (60%) + Harris County cancer incidence SIR (40%). Weights are developer-defined estimates, not published standards. Scores are informational only.">
+              <div className="text-xs text-alice-blue/50" title="Methodology: Flood sub-score blends FEMA zone classification (50%) and historical flood frequency (50%), weighted 60% of composite. Cancer SIR weighted 40%. Weights are developer-defined estimates, not published standards.">
                 Composite Safety Score
               </div>
             </div>
@@ -117,17 +127,61 @@ export default function ListingDetail({
         <AirQualityCard lat={listing.latitude} lng={listing.longitude} />
 
         {/* Flood Info */}
-        {listing.flood_zone_code && (
-          <div className="border-2 border-sapphire-sky p-4">
-            <div className="text-xs font-semibold uppercase tracking-wider text-alice-blue/60 mb-1">
-              FEMA Flood Zone
-            </div>
-            <div className="font-fraunces text-xl font-bold text-alice-blue">
-              Zone {listing.flood_zone_code}
-            </div>
-            <div className="text-xs text-alice-blue/50 mt-1">
-              Risk level: {listing.flood_risk_level?.replace("_", " ")}
-            </div>
+        {(listing.flood_zone_code || floodHistory) && (
+          <div className="border-2 border-sapphire-sky p-4 flex flex-col gap-3">
+            {listing.flood_zone_code && (
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-alice-blue/60 mb-1">
+                  FEMA Flood Zone
+                </div>
+                <div className="font-fraunces text-xl font-bold text-alice-blue">
+                  Zone {listing.flood_zone_code}
+                </div>
+                <div className="text-xs text-alice-blue/50 mt-0.5">
+                  Risk level: {listing.flood_risk_level?.replace("_", " ")}
+                </div>
+              </div>
+            )}
+            {floodHistory && floodHistory.event_count > 0 && (
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-alice-blue/60 mb-2">
+                  Historical Flooding
+                </div>
+                <div className="font-fraunces text-xl font-bold text-alice-blue mb-1">
+                  {floodHistory.event_count} flood event{floodHistory.event_count !== 1 ? "s" : ""}
+                </div>
+                <div className="text-xs text-alice-blue/50 mb-2">
+                  {floodHistory.total_structures.toLocaleString()} structures flooded (1977–2019)
+                </div>
+                <div className="flex flex-col gap-1">
+                  {floodHistory.harvey > 0 && (
+                    <FloodEventRow label="Hurricane Harvey (2017)" count={floodHistory.harvey} />
+                  )}
+                  {floodHistory.imelda > 0 && (
+                    <FloodEventRow label="Tropical Storm Imelda (2019)" count={floodHistory.imelda} />
+                  )}
+                  {floodHistory.memorial_day > 0 && (
+                    <FloodEventRow label="Memorial Day Flood (2016)" count={floodHistory.memorial_day} />
+                  )}
+                  {floodHistory.tax_day > 0 && (
+                    <FloodEventRow label="Tax Day Flood (2016)" count={floodHistory.tax_day} />
+                  )}
+                  {floodHistory.allison > 0 && (
+                    <FloodEventRow label="Tropical Storm Allison (2001)" count={floodHistory.allison} />
+                  )}
+                </div>
+              </div>
+            )}
+            {floodHistory && floodHistory.event_count === 0 && (
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-alice-blue/60 mb-1">
+                  Historical Flooding
+                </div>
+                <div className="text-xs text-alice-blue/50">
+                  No recorded flood events in this census tract (1977–2019)
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -143,15 +197,25 @@ export default function ListingDetail({
         <div className="text-alice-blue/30 pb-4 space-y-1" style={{ fontSize: "9px" }}>
           <div>
             Cancer data: Harris County Public Health / Texas Cancer Registry (DSHS).
-            Flood data: FEMA National Flood Hazard Layer. Air quality: PurpleAir (EPA-corrected).
+            Flood data: FEMA NFHL + HCFCD Historical Flooding (MAAPnext). Air quality: PurpleAir (EPA-corrected).
           </div>
           <div>
-            Score methodology: FEMA flood zone (60%) + cancer SIR (40%). Weights are
-            developer-defined estimates, not published standards.
+            Score methodology: flood sub-score blends FEMA zone (50%) and historical event frequency (50%), weighted 60% of composite. Cancer SIR weighted 40%. Weights are developer-defined estimates, not published standards.
           </div>
           <div>Safety scores are informational only. Consult professionals before making purchasing decisions.</div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function FloodEventRow({ label, count }: { label: string; count: number }) {
+  return (
+    <div className="flex justify-between items-baseline">
+      <span className="text-xs text-alice-blue/70">{label}</span>
+      <span className="font-fraunces text-xs font-bold text-fresh-sky ml-2 flex-shrink-0">
+        {count.toLocaleString()} structures
+      </span>
     </div>
   );
 }

@@ -34,23 +34,27 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { data, error } = await supabase.rpc("get_safety_at_point", {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any).rpc("get_safety_at_point", {
       lat,
       lng,
     });
 
     if (error) throw error;
 
-    const row = data?.[0];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const row = (data as any)?.[0];
     const scores = computeSafetyScore(
       row?.cancer_sir ?? null,
-      (row?.flood_risk as FloodRiskLevel) ?? null
+      (row?.flood_risk as FloodRiskLevel) ?? null,
+      row?.flood_event_count ?? null
     );
 
     return NextResponse.json({
       ...scores,
       cancer_tract_geoid: row?.cancer_tract_geoid ?? null,
       flood_zone: row?.flood_zone ?? null,
+      flood_event_count: row?.flood_event_count ?? null,
     });
   } catch (error) {
     console.error("Safety API error:", error);

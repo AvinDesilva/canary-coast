@@ -1,0 +1,105 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "geoid": "48201212400",
+        "flood_event_count": 6,
+        "flood_total_structures": 315,
+        "flood_harvey": 287,
+        "flood_imelda": 5,
+        "flood_tax_day": 0,
+        "flood_memorial_day": 0,
+        "flood_allison": 12
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.50, 29.72], [-95.44, 29.72], [-95.44, 29.77],
+          [-95.50, 29.77], [-95.50, 29.72]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "geoid": "48201220100",
+        "flood_event_count": 6,
+        "flood_total_structures": 487,
+        "flood_harvey": 458,
+        "flood_imelda": 6,
+        "flood_tax_day": 1,
+        "flood_memorial_day": 2,
+        "flood_allison": 0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.44, 29.72], [-95.38, 29.72], [-95.38, 29.77],
+          [-95.44, 29.77], [-95.44, 29.72]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "geoid": "48201221900",
+        "flood_event_count": 3,
+        "flood_total_structures": 142,
+        "flood_harvey": 120,
+        "flood_imelda": 0,
+        "flood_tax_day": 0,
+        "flood_memorial_day": 8,
+        "flood_allison": 0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.38, 29.72], [-95.32, 29.72], [-95.32, 29.77],
+          [-95.38, 29.77], [-95.38, 29.72]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "geoid": "48201330100",
+        "flood_event_count": 10,
+        "flood_total_structures": 892,
+        "flood_harvey": 780,
+        "flood_imelda": 22,
+        "flood_tax_day": 15,
+        "flood_memorial_day": 30,
+        "flood_allison": 45
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.56, 29.66], [-95.50, 29.66], [-95.50, 29.72],
+          [-95.56, 29.72], [-95.56, 29.66]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "geoid": "48201340200",
+        "flood_event_count": 0,
+        "flood_total_structures": 0,
+        "flood_harvey": 0,
+        "flood_imelda": 0,
+        "flood_tax_day": 0,
+        "flood_memorial_day": 0,
+        "flood_allison": 0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.32, 29.77], [-95.26, 29.77], [-95.26, 29.82],
+          [-95.32, 29.82], [-95.32, 29.77]
+        ]]
+      }
+    }
+  ]
+}

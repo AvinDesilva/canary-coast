@@ -31,6 +31,17 @@ export interface SafetyAtPoint {
   cancer_prevalence: number | null;
   flood_zone: string | null;
   flood_risk: FloodRiskLevel | null;
+  flood_event_count: number | null;
+}
+
+export interface HistoricalFloodInfo {
+  event_count: number;
+  total_structures: number;
+  harvey: number;
+  imelda: number;
+  tax_day: number;
+  memorial_day: number;
+  allison: number;
 }
 
 export interface ZipCancerRecord {

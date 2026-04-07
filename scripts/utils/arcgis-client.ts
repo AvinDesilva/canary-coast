@@ -5,6 +5,7 @@ export interface ArcGISQueryOptions {
   outFields?: string;
   pageSize?: number;
   outSR?: number;
+  returnGeometry?: boolean;
 }
 
 export async function queryArcGIS(
@@ -17,6 +18,7 @@ export async function queryArcGIS(
     outFields = "*",
     pageSize = 2000,
     outSR,
+    returnGeometry = true,
   } = options;
 
   const allFeatures: GeoJSON.Feature[] = [];
@@ -30,7 +32,7 @@ export async function queryArcGIS(
       f: "geojson",
       resultRecordCount: String(pageSize),
       resultOffset: String(offset),
-      returnGeometry: "true",
+      returnGeometry: returnGeometry ? "true" : "false",
       ...(outSR ? { outSR: String(outSR) } : {}),
     });
 

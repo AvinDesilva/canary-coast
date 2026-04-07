@@ -19,6 +19,10 @@ const FLOOD_SCORE_MAP: Record<string, number> = {
   very_high: 0,
 };
 
+const HISTORICAL_FLOOD_CAP = 15;
+const FLOOD_FEMA_WEIGHT = 0.5;
+const FLOOD_HISTORICAL_WEIGHT = 0.5;
+
 async function main() {
   const supabase = getAdminClient();
 
@@ -46,16 +50,26 @@ async function main() {
     const row = safety?.[0];
     const cancerSIR = row?.cancer_sir;
     const floodRisk = row?.flood_risk;
+    const floodEventCount = row?.flood_event_count;
 
     const cancerScore =
       cancerSIR != null
         ? clamp(0, 100, 100 - ((cancerSIR - 0.5) / 1.5) * 100)
         : 50;
 
-    const floodScore =
+    const femaScore =
       floodRisk && floodRisk in FLOOD_SCORE_MAP
         ? FLOOD_SCORE_MAP[floodRisk]
         : 50;
+
+    const historicalScore =
+      floodEventCount != null
+        ? clamp(0, 100, 100 * (1 - floodEventCount / HISTORICAL_FLOOD_CAP))
+        : femaScore;
+
+    const floodScore = Math.round(
+      femaScore * FLOOD_FEMA_WEIGHT + historicalScore * FLOOD_HISTORICAL_WEIGHT
+    );
 
     const total = Math.round(cancerScore * 0.4 + floodScore * 0.6);
 

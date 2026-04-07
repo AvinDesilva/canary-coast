@@ -22,6 +22,15 @@ export const FLOOD_SCORE_MAP: Record<FloodRiskLevel, number> = {
   very_high: 0,
 };
 
+// Historical flood scoring: tracts with >= this many events score 0 on the historical component.
+// The HCFCD dataset covers 1977–2019. Most Harris County tracts saw 0–8 events;
+// 15+ events indicates chronically flood-prone areas.
+export const HISTORICAL_FLOOD_CAP = 15;
+
+// Weights within the blended flood sub-score (must sum to 1)
+export const FLOOD_FEMA_WEIGHT = 0.5;
+export const FLOOD_HISTORICAL_WEIGHT = 0.5;
+
 export const SAFETY_BANDS: SafetyBand[] = [
   { label: "Low Risk", color: "#e0e7ff", min: 80, max: 100 },
   { label: "Low-Moderate Risk", color: "#a5b4fc", min: 60, max: 79 },

@@ -9,6 +9,7 @@ import facilitiesGeoData from "@/__fixtures__/mock-facilities-geojson.json";
 import airQualityGeoData from "@/__fixtures__/mock-air-quality-geojson.json";
 import airQualityData from "@/__fixtures__/mock-air-quality.json";
 import zipCancerData from "@/__fixtures__/mock-zip-cancer-data.json";
+import historicalFloodsGeoData from "@/__fixtures__/mock-historical-floods-geojson.json";
 
 export const MOCK_LISTINGS = listingsData as unknown as CachedListing[];
 export const MOCK_FLOOD_GEOJSON = floodGeoData as unknown as GeoJSON.FeatureCollection;
@@ -17,3 +18,4 @@ export const MOCK_FACILITIES_GEOJSON = facilitiesGeoData as unknown as GeoJSON.F
 export const MOCK_AIR_QUALITY_GEOJSON = airQualityGeoData as unknown as GeoJSON.FeatureCollection;
 export const MOCK_AIR_QUALITY = airQualityData as unknown as AirQualityReading;
 export const MOCK_ZIP_CANCER_DATA = zipCancerData as unknown as ZipCancerRecord[];
+export const MOCK_HISTORICAL_FLOODS_GEOJSON = historicalFloodsGeoData as unknown as GeoJSON.FeatureCollection;

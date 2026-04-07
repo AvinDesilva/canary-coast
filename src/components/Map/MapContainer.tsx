@@ -15,15 +15,17 @@ import FloodOverlay from "./FloodOverlay";
 import CancerOverlay from "./CancerOverlay";
 import FacilityOverlay from "./FacilityOverlay";
 import AirQualityOverlay from "./AirQualityOverlay";
+import HistoricalFloodOverlay from "./HistoricalFloodOverlay";
 
 interface MapContainerProps {
   listings: CachedListing[];
   loading?: boolean;
-  overlays: { flood: boolean; cancer: boolean; listings: boolean; facilities: boolean; airQuality: boolean };
+  overlays: { flood: boolean; cancer: boolean; listings: boolean; facilities: boolean; airQuality: boolean; historicalFloods: boolean };
   floodGeoJSON?: GeoJSON.FeatureCollection;
   cancerGeoJSON?: GeoJSON.FeatureCollection;
   facilitiesGeoJSON?: GeoJSON.FeatureCollection;
   airQualityGeoJSON?: GeoJSON.FeatureCollection;
+  historicalFloodsGeoJSON?: GeoJSON.FeatureCollection;
   cancerType?: CancerTypeValue;
   onBoundsChange: (bounds: BoundingBox, zoom: number) => void;
   onSelectListing: (listing: CachedListing) => void;
@@ -38,6 +40,7 @@ export default function MapContainer({
   cancerGeoJSON,
   facilitiesGeoJSON,
   airQualityGeoJSON,
+  historicalFloodsGeoJSON,
   cancerType,
   onBoundsChange,
   onSelectListing,
@@ -162,6 +165,7 @@ export default function MapContainer({
             />
           )}
           {overlays.flood && <FloodOverlay map={mapInstance} geojson={floodGeoJSON} />}
+          {overlays.historicalFloods && <HistoricalFloodOverlay map={mapInstance} geojson={historicalFloodsGeoJSON} />}
           {overlays.cancer && <CancerOverlay map={mapInstance} geojson={cancerGeoJSON} cancerType={cancerType} />}
           {overlays.facilities && <FacilityOverlay map={mapInstance} geojson={facilitiesGeoJSON} />}
           {overlays.airQuality && <AirQualityOverlay map={mapInstance} geojson={airQualityGeoJSON} />}
