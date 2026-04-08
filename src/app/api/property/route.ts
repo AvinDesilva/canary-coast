@@ -86,6 +86,12 @@ export async function GET(req: NextRequest) {
       safety_score: scores.total,
       fetched_at: new Date().toISOString(),
       expires_at: new Date(Date.now() + 86400000).toISOString(),
+      prev_price: null,
+      price_changed_at: null,
+      price_drop_count: 0,
+      first_drop_at: null,
+      cumulative_drop_pct: 0,
+      price_flag: "none",
     };
 
     return NextResponse.json(result, {

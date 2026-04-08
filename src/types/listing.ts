@@ -1,5 +1,6 @@
 export type ListingStatus = "FOR_SALE" | "PENDING" | "SOLD" | "UNLISTED";
 export type HomeType = "SINGLE_FAMILY" | "CONDO" | "TOWNHOUSE" | "MULTI_FAMILY";
+export type PriceFlag = "none" | "medium" | "high" | "critical";
 
 export interface CachedListing {
   id: string;
@@ -32,6 +33,12 @@ export interface CachedListing {
   safety_score: number | null;
   fetched_at: string;
   expires_at: string;
+  prev_price: number | null;
+  price_changed_at: string | null;
+  price_drop_count: number;
+  first_drop_at: string | null;
+  cumulative_drop_pct: number;
+  price_flag: PriceFlag;
 }
 
 export interface ListingFilters {

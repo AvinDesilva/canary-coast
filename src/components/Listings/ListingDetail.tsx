@@ -10,6 +10,7 @@ import { MOCK_ZIP_CANCER_DATA } from "@/lib/mock-data";
 import { DEMO_MODE } from "@/lib/constants";
 import type { FloodRiskLevel, ZipCancerRecord, HistoricalFloodInfo } from "@/types/safety";
 import AirQualityCard from "@/components/Safety/AirQualityCard";
+import { isFlagged, getPriceFlagDisplay, formatPriceDelta } from "@/lib/price-flag";
 
 interface ListingDetailProps {
   listing: CachedListing;
@@ -93,6 +94,28 @@ export default function ListingDetail({
           <div className="font-fraunces text-4xl font-bold text-alice-blue leading-none mb-2">
             {price}
           </div>
+          {isFlagged(listing.price_flag) && (() => {
+            const flagDisplay = getPriceFlagDisplay(listing.price_flag);
+            if (!flagDisplay) return null;
+            return (
+              <div
+                className="border px-3 py-2 mt-2 mb-2"
+                style={{ borderColor: flagDisplay.color, backgroundColor: flagDisplay.bgColor }}
+              >
+                <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: flagDisplay.color }}>
+                  {flagDisplay.label}
+                </div>
+                <div className="font-fraunces text-lg font-bold" style={{ color: flagDisplay.color }}>
+                  {formatPriceDelta(listing.price, listing.prev_price)}
+                </div>
+                {listing.price_drop_count >= 2 && (
+                  <div className="text-xs opacity-70 text-alice-blue">
+                    {listing.price_drop_count} price drops tracked
+                  </div>
+                )}
+              </div>
+            );
+          })()}
           {isUnlisted && (
             <div className="inline-block px-2 py-0.5 text-xs font-semibold uppercase tracking-wider bg-sapphire-sky/30 text-alice-blue/70 border border-sapphire-sky mb-2">
               Not Listed for Sale

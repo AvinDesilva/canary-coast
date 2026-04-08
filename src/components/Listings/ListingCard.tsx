@@ -2,6 +2,8 @@
 
 import type { CachedListing } from "@/types/listing";
 import SafetyBadge from "@/components/Safety/SafetyBadge";
+import { isFlagged, getPriceFlagDisplay, formatPriceDelta } from "@/lib/price-flag";
+import type { PriceFlag } from "@/types/listing";
 
 interface ListingCardProps {
   listing: CachedListing;
@@ -29,6 +31,13 @@ export default function ListingCard({
           <div className="font-fraunces text-lg font-bold text-alice-blue leading-tight mb-1 truncate">
             {price}
           </div>
+          {isFlagged(listing.price_flag) && (
+            <PriceFlagBadge
+              flag={listing.price_flag}
+              price={listing.price}
+              prevPrice={listing.prev_price}
+            />
+          )}
           <div className="text-xs text-alice-blue/70 truncate">
             {listing.address}
           </div>
@@ -47,5 +56,28 @@ export default function ListingCard({
         </div>
       </div>
     </button>
+  );
+}
+
+function PriceFlagBadge({
+  flag,
+  price,
+  prevPrice,
+}: {
+  flag: PriceFlag;
+  price: number | null;
+  prevPrice: number | null;
+}) {
+  const display = getPriceFlagDisplay(flag);
+  if (!display) return null;
+  const delta = formatPriceDelta(price, prevPrice);
+  return (
+    <div
+      className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider mb-1"
+      style={{ color: display.color, backgroundColor: display.bgColor }}
+    >
+      <span>{display.shortLabel}</span>
+      {delta && <span className="opacity-80">{delta}</span>}
+    </div>
   );
 }
