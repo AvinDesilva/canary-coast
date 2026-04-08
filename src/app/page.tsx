@@ -9,6 +9,8 @@ import ErrorBoundary from "@/components/UI/ErrorBoundary";
 import ListingPanel from "@/components/Listings/ListingPanel";
 import ListingDetail from "@/components/Listings/ListingDetail";
 import ScoreLegend from "@/components/Safety/ScoreLegend";
+import MobileOverlayControls from "@/components/Mobile/MobileOverlayControls";
+import MobileListingsSheet from "@/components/Mobile/MobileListingsSheet";
 import { useMapListings } from "@/hooks/useMapListings";
 import { useMapOverlays } from "@/hooks/useMapOverlays";
 
@@ -52,7 +54,7 @@ export default function Home() {
 
   return (
     <ErrorBoundary>
-      <div className="h-screen flex flex-col">
+      <div className="h-dvh flex flex-col overflow-hidden w-screen">
         <Header
           overlays={overlays}
           onToggleOverlay={toggleOverlay}
@@ -61,13 +63,16 @@ export default function Home() {
           cancerType={cancerType}
           onCancerTypeChange={setCancerType}
         />
-        <div className="flex-1 flex overflow-hidden">
-          <ListingPanel
-            listings={listings}
-            loading={loading}
-            onSelectListing={handleSelectListing}
-          />
-          <div className="flex-1 relative">
+        <div className="flex-1 flex overflow-hidden min-h-0">
+          {/* Desktop only: left listings panel */}
+          <div className="hidden md:contents">
+            <ListingPanel
+              listings={listings}
+              loading={loading}
+              onSelectListing={handleSelectListing}
+            />
+          </div>
+          <div className="flex-1 relative h-full min-h-0">
             <MapContainer
               listings={listings}
               loading={loading}
@@ -83,6 +88,19 @@ export default function Home() {
               onFlyToReady={handleFlyToReady}
             />
             <ScoreLegend />
+            {/* Mobile: floating overlay controls (layers + legend buttons) */}
+            <MobileOverlayControls
+              overlays={overlays}
+              onToggleOverlay={toggleOverlay}
+              cancerType={cancerType}
+              onCancerTypeChange={setCancerType}
+            />
+            {/* Mobile: bottom sheet listings */}
+            <MobileListingsSheet
+              listings={listings}
+              loading={loading}
+              onSelectListing={handleSelectListing}
+            />
           </div>
         </div>
         {selectedListing && (

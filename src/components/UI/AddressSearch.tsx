@@ -46,8 +46,8 @@ export default function AddressSearch({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2 flex-1 max-w-sm">
-      <div className="flex-1 relative">
+    <form onSubmit={handleSubmit} className="flex items-center gap-2 w-full min-w-0">
+      <div className="flex-1 relative min-w-0">
         <input
           type="text"
           value={address}
@@ -67,9 +67,25 @@ export default function AddressSearch({
       <button
         type="submit"
         disabled={loading || !address.trim()}
-        className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider border-2 border-fresh-sky bg-fresh-sky text-twilight-indigo disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+        className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider border-2 border-fresh-sky bg-fresh-sky text-twilight-indigo disabled:opacity-40 disabled:cursor-not-allowed transition-opacity flex items-center justify-center"
+        aria-label="Search"
       >
-        {loading ? "..." : "Search"}
+        {/* Desktop: text label */}
+        <span className="hidden md:inline">{loading ? "..." : "Search"}</span>
+        {/* Mobile: magnifying glass icon */}
+        <svg
+          className="md:hidden w-4 h-4"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="8.5" cy="8.5" r="5.5" />
+          <line x1="13" y1="13" x2="18" y2="18" />
+        </svg>
       </button>
       {isLow && (
         <span className="text-xs text-yellow-400/70" title="Rentcast API calls remaining this month">

@@ -4,7 +4,7 @@ import { SAFETY_BANDS } from "@/lib/constants";
 
 export default function ScoreLegend() {
   return (
-    <div className="absolute bottom-4 left-4 z-10 bg-dusk-blue border-2 border-sapphire-sky p-3 w-48">
+    <div className="hidden md:block absolute bottom-4 left-4 z-10 bg-dusk-blue border-2 border-sapphire-sky p-3 w-48">
       <div className="text-xs font-semibold uppercase tracking-wider text-alice-blue/80 mb-2">
         Safety Score
       </div>

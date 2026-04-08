@@ -23,15 +23,17 @@ export default function Header({
   onCancerTypeChange,
 }: HeaderProps) {
   return (
-    <header className="flex items-center gap-4 px-6 py-3 bg-twilight-indigo border-b-2 border-sapphire-sky z-50 relative">
-      <h1 className="font-fraunces text-xl font-bold text-alice-blue tracking-tight flex-shrink-0">
+    <header className="flex items-center gap-3 px-3 md:gap-4 md:px-6 pt-safe pb-3 md:py-3 bg-twilight-indigo border-b-2 border-sapphire-sky z-50 relative overflow-hidden">
+      <h1 className="font-fraunces text-lg md:text-xl font-bold text-alice-blue tracking-tight flex-shrink-0">
         Canary Coast
       </h1>
-      <AddressSearch
-        onPropertyFound={onPropertyFound}
-        remainingRequests={remainingRequests}
-      />
-      <nav className="flex gap-4 flex-shrink-0 items-center">
+      <div className="flex-1 min-w-0">
+        <AddressSearch
+          onPropertyFound={onPropertyFound}
+          remainingRequests={remainingRequests}
+        />
+      </div>
+      <nav className="hidden md:flex gap-4 flex-shrink-0 items-center">
         <ToggleButton
           active={overlays.listings}
           onClick={() => onToggleOverlay("listings")}

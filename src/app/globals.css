@@ -44,10 +44,25 @@
   }
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   background-color: var(--color-twilight-indigo);
   color: var(--color-alice-blue);
   font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* Safe-area utilities for iPhone notch / home indicator.
+   Always apply a minimum of 0.75rem so the header/footer look correct
+   on devices with no notch (or in DevTools where inset = 0). */
+.pt-safe {
+  padding-top: max(env(safe-area-inset-top, 0.75rem), 0.75rem);
+}
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 0px);
 }
 
 /* Design system component classes */

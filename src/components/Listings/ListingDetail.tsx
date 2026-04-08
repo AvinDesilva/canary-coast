@@ -57,7 +57,18 @@ export default function ListingDetail({
   }, [listing.latitude, listing.longitude]);
 
   return (
-    <div className="fixed inset-y-0 right-0 w-[420px] bg-twilight-indigo border-l-2 border-sapphire-sky z-50 flex flex-col overflow-y-auto animate-slide-up">
+    <>
+      {/* Mobile backdrop — tap map to dismiss */}
+      <div
+        className="md:hidden fixed inset-0 z-40"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Panel: bottom-half sheet on mobile, right sidebar on desktop */}
+    <div className="fixed z-50 bg-twilight-indigo flex flex-col overflow-y-auto animate-slide-up
+      bottom-0 inset-x-0 h-[55vh] border-t-2 border-sapphire-sky
+      md:inset-y-0 md:bottom-auto md:right-0 md:left-auto md:inset-x-auto md:w-[420px] md:h-full md:border-t-0 md:border-l-2">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b-2 border-sapphire-sky">
         <h2 className="font-fraunces text-lg font-bold text-alice-blue truncate">
@@ -206,6 +217,7 @@ export default function ListingDetail({
         </div>
       </div>
     </div>
+    </>
   );
 }
 
