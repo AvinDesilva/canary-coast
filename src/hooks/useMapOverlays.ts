@@ -17,7 +17,7 @@ export interface OverlayState {
 export function useMapOverlays() {
   const [overlays, setOverlays] = useState<OverlayState>({
     flood: false,
-    cancer: false,
+    cancer: true,
     listings: true,
     facilities: false,
     airQuality: false,
